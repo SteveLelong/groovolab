@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Groov'O'matiK — Outil Pédagogique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:     #0d0c0a;
+  --ink2:    #161410;
+  --ink3:    #201e1a;
+  --ink4:    #2c2924;
+  --amber:   #e8a030;
+  --amber2:  #c47a18;
+  --terra:   #c45c38;
+  --sage:    #7aad80;
+  --dust:    #b09a7a;
+  --cream:   #f5efe6;
+  --cream2:  #d9cfc2;
+  --cream3:  #9a8f82;
+  --border:  rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.11);
+  --r:       10px;
+  --r-sm:    7px;
+  --font:    'DM Sans', sans-serif;
+  --mono:    'Space Mono', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:15px;-webkit-tap-highlight-color:transparent;}
+body{background:var(--ink);color:var(--cream);font-family:var(--font);min-height:100vh;overflow-x:hidden;}
+
+/* ── HEADER ── */
+.hdr{background:var(--ink2);border-bottom:1px solid var(--border2);padding:0 1rem;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:200;}
+.logo{font-family:var(--mono);font-size:1rem;font-weight:700;letter-spacing:-.01em;line-height:1;}
+.logo em{font-style:normal;color:var(--amber);}
+.hdr-r{display:flex;align-items:center;gap:10px;}
+.lang-wrap{display:flex;border:1px solid var(--border2);border-radius:30px;overflow:hidden;}
+.lang-btn{font-size:10px;font-weight:700;font-family:var(--mono);padding:4px 10px;background:transparent;color:var(--cream3);border:none;cursor:pointer;}
+.lang-btn.on{background:var(--amber);color:var(--ink);}
+.hdr-count{font-family:var(--mono);font-size:11px;color:var(--cream3);white-space:nowrap;}
+.hdr-count b{color:var(--amber);}
+
+/* ── NAV ── */
+.nav{background:var(--ink2);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;padding:0 6px;scrollbar-width:none;}
+.nav::-webkit-scrollbar{display:none;}
+.nb{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.04em;padding:0 12px;height:42px;background:transparent;color:var(--cream3);border:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s;}
+.nb.on{color:var(--amber);border-bottom-color:var(--amber);}
+.nb:hover:not(.on){color:var(--cream2);}
+
+/* ── MAIN ── */
+.main{padding:1.1rem;max-width:760px;margin:0 auto;}
+
+/* ── RANDOM HERO ── */
+.rand-hero{background:linear-gradient(135deg,var(--ink3),var(--ink2));border:1px solid var(--border2);border-radius:var(--r);padding:1.25rem;margin-bottom:.9rem;min-height:240px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;}
+.rand-hero::before{content:'';position:absolute;top:-50px;right:-50px;width:200px;height:200px;background:radial-gradient(circle,rgba(232,160,48,.1) 0%,transparent 70%);pointer-events:none;}
+.rh-badge{display:inline-flex;align-items:center;gap:6px;margin-bottom:.75rem;}
+.rh-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.rh-type{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);}
+.rh-table{font-family:var(--mono);font-size:10px;color:var(--cream3);letter-spacing:.06em;margin-bottom:.5rem;}
+.rh-name{font-size:1.35rem;font-weight:700;line-height:1.25;margin-bottom:.6rem;}
+.rh-score{font-size:.875rem;color:var(--cream2);line-height:1.65;margin-bottom:.9rem;}
+.rh-pills{display:flex;gap:6px;flex-wrap:wrap;}
+.pill{font-family:var(--mono);font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;border:1px solid var(--border2);color:var(--cream3);letter-spacing:.03em;white-space:nowrap;}
+.pill-amber{border-color:rgba(232,160,48,.4);color:var(--amber);}
+.pill-terra{border-color:rgba(196,92,56,.4);color:var(--terra);}
+.pill-sage{border-color:rgba(122,173,128,.4);color:var(--sage);}
+.pill-beginner{border-color:rgba(122,173,128,.35);color:var(--sage);}
+.pill-intermediate{border-color:rgba(232,160,48,.35);color:var(--amber);}
+.pill-advanced{border-color:rgba(196,92,56,.35);color:var(--terra);}
+.rand-btns{display:flex;gap:8px;}
+.btn-roll{flex:1;padding:11px;font-size:13px;font-weight:700;font-family:var(--mono);letter-spacing:.05em;border:none;border-radius:var(--r-sm);background:var(--amber);color:var(--ink);cursor:pointer;transition:background .15s;}
+.btn-roll:hover{background:#f0ac3a;}
+.btn-add-rand{padding:11px 14px;border:1px solid var(--border2);border-radius:var(--r-sm);background:transparent;color:var(--cream2);cursor:pointer;font-size:13px;font-family:var(--mono);}
+.btn-add-rand:hover{background:var(--ink3);color:var(--cream);}
+.btn-timer-rand{padding:11px 14px;border:1px solid rgba(232,160,48,.35);border-radius:var(--r-sm);background:transparent;color:var(--amber);cursor:pointer;font-size:13px;font-family:var(--mono);}
+.btn-timer-rand:hover{background:rgba(232,160,48,.08);}
+/* filter chips */
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.9rem;}
+.fchip{font-family:var(--mono);font-size:10px;font-weight:700;padding:4px 11px;border:1px solid var(--border);border-radius:20px;background:transparent;color:var(--cream3);cursor:pointer;letter-spacing:.04em;}
+.fchip.on{background:var(--ink4);color:var(--cream);border-color:var(--border2);}
+.fchip:hover:not(.on){color:var(--cream2);}
+
+/* ── TABLE HEADERS ── */
+.tbl-hdr{margin-bottom:.9rem;}
+.tbl-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cream3);margin-bottom:3px;}
+.tbl-name{font-size:1.1rem;font-weight:700;}
+.tbl-desc{font-size:.8rem;color:var(--cream3);margin-top:4px;line-height:1.5;}
+
+/* ── EXERCISE CARDS ── */
+.ex-list{display:flex;flex-direction:column;gap:7px;}
+.ex-card{background:var(--ink2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:border-color .15s;}
+.ex-card:hover{border-color:var(--border2);}
+.ex-card.open{border-color:rgba(232,160,48,.25);}
+.ex-head{padding:12px 14px;display:flex;align-items:center;gap:10px;}
+.ex-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.ex-title{flex:1;font-size:13.5px;font-weight:600;line-height:1.3;}
+.ex-rpills{display:flex;gap:5px;align-items:center;flex-wrap:wrap;}
+.ex-chev{font-size:18px;color:var(--cream3);transition:transform .2s;flex-shrink:0;line-height:1;}
+.ex-card.open .ex-chev{transform:rotate(180deg);color:var(--amber);}
+.ex-body{display:none;padding:0 14px 14px;border-top:1px solid var(--border);}
+.ex-card.open .ex-body{display:block;}
+.ex-sec{margin-top:11px;}
+.ex-lbl{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cream3);margin-bottom:3px;}
+.ex-txt{font-size:13px;color:var(--cream2);line-height:1.65;}
+.ex-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;}
+.ex-acts{margin-top:10px;display:flex;gap:7px;flex-wrap:wrap;}
+.btn-xs{font-family:var(--mono);font-size:10px;font-weight:700;padding:5px 11px;border-radius:var(--r-sm);cursor:pointer;letter-spacing:.04em;}
+.btn-sess{border:1px solid rgba(232,160,48,.4);background:transparent;color:var(--amber);}
+.btn-sess:hover{background:rgba(232,160,48,.1);}
+.btn-tmr{border:1px solid rgba(196,92,56,.4);background:transparent;color:var(--terra);}
+.btn-tmr:hover{background:rgba(196,92,56,.1);}
+
+/* ── SEARCH ── */
+.srch-wrap{position:relative;margin-bottom:.9rem;}
+.srch-ico{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--cream3);font-size:15px;pointer-events:none;}
+.srch{width:100%;padding:9px 12px 9px 34px;background:var(--ink2);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--cream);font-size:13px;font-family:var(--font);outline:none;}
+.srch:focus{border-color:rgba(232,160,48,.35);}
+.empty{text-align:center;padding:2.5rem 1rem;color:var(--cream3);font-family:var(--mono);font-size:11px;}
+
+/* ── SESSION ── */
+.sess-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem;}
+.sess-lbl{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cream3);}
+.sess-hdr-btns{display:flex;gap:6px;}
+.btn-exp{font-family:var(--mono);font-size:10px;font-weight:700;padding:5px 12px;border:1px solid var(--border2);border-radius:var(--r-sm);background:transparent;color:var(--cream2);cursor:pointer;}
+.btn-exp:hover{background:var(--ink3);color:var(--cream);}
+.btn-print{font-family:var(--mono);font-size:10px;font-weight:700;padding:5px 12px;border:1px solid rgba(232,160,48,.35);border-radius:var(--r-sm);background:transparent;color:var(--amber);cursor:pointer;}
+.btn-print:hover{background:rgba(232,160,48,.1);}
+.sess-list{display:flex;flex-direction:column;gap:7px;}
+.sess-slot{background:var(--ink2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;display:flex;align-items:center;gap:10px;}
+.slot-n{width:24px;height:24px;border-radius:50%;background:var(--ink4);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--cream3);flex-shrink:0;}
+.slot-info{flex:1;}
+.slot-name{font-size:13px;font-weight:600;}
+.slot-meta{font-size:11px;font-family:var(--mono);color:var(--cream3);margin-top:2px;}
+.slot-btns{display:flex;gap:5px;}
+.slot-tmr{background:transparent;border:1px solid rgba(232,160,48,.3);border-radius:5px;color:var(--amber);cursor:pointer;font-size:12px;padding:4px 7px;font-family:var(--mono);}
+.slot-rm{background:transparent;border:none;color:var(--cream3);cursor:pointer;font-size:17px;padding:3px;}
+.slot-rm:hover{color:var(--terra);}
+.sess-stats{display:flex;gap:0;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-top:.9rem;}
+.stat-item{flex:1;text-align:center;padding:12px 8px;background:var(--ink3);}
+.stat-item+.stat-item{border-left:1px solid var(--border);}
+.stat-n{font-family:var(--mono);font-size:1.2rem;font-weight:700;color:var(--amber);}
+.stat-l{font-family:var(--mono);font-size:9px;color:var(--cream3);letter-spacing:.06em;margin-top:2px;}
+.sess-empty{text-align:center;padding:3rem 1rem;color:var(--cream3);background:var(--ink2);border:1px dashed var(--border2);border-radius:var(--r);}
+.sess-empty-ico{font-size:2rem;margin-bottom:.5rem;}
+
+/* ── ADD FORM ── */
+.form-wrap{background:var(--ink2);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;}
+.fgrp{margin-bottom:.9rem;}
+.flbl{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cream3);margin-bottom:5px;display:block;}
+.finput,.fselect,.ftextarea{width:100%;font-size:13px;font-family:var(--font);background:var(--ink3);color:var(--cream);border:1px solid var(--border2);border-radius:var(--r-sm);padding:8px 11px;outline:none;}
+.finput:focus,.fselect:focus,.ftextarea:focus{border-color:rgba(232,160,48,.4);}
+.ftextarea{min-height:78px;resize:vertical;line-height:1.5;}
+.fselect option{background:var(--ink3);}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;}
+.btn-submit{width:100%;padding:11px;font-size:13px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;border:none;border-radius:var(--r-sm);background:var(--amber);color:var(--ink);cursor:pointer;margin-top:.4rem;}
+.btn-submit:hover{background:#f0ac3a;}
+.f-ok{display:none;background:rgba(122,173,128,.1);border:1px solid rgba(122,173,128,.35);border-radius:var(--r-sm);padding:9px 14px;font-family:var(--mono);font-size:11px;color:var(--sage);margin-top:.7rem;}
+.tag-box{display:flex;flex-wrap:wrap;gap:5px;background:var(--ink3);border:1px solid var(--border2);border-radius:var(--r-sm);padding:8px;}
+.tc{display:none;}
+.tl{font-family:var(--mono);font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;border:1px solid var(--border2);color:var(--cream3);cursor:pointer;letter-spacing:.03em;user-select:none;}
+.tc:checked+.tl{background:var(--ink4);color:var(--amber);border-color:rgba(232,160,48,.4);}
+
+/* ── TIMER OVERLAY ── */
+.timer-overlay{display:none;position:fixed;inset:0;background:rgba(13,12,10,.97);z-index:500;flex-direction:column;align-items:center;justify-content:center;padding:2rem;}
+.timer-overlay.show{display:flex;}
+.tmr-ex-name{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cream3);margin-bottom:.5rem;text-align:center;}
+.tmr-display{font-size:5rem;font-weight:700;font-family:var(--mono);letter-spacing:-.02em;line-height:1;margin-bottom:1rem;transition:color .3s;}
+.tmr-progress-wrap{width:100%;max-width:320px;height:6px;background:var(--ink4);border-radius:3px;margin-bottom:1.75rem;overflow:hidden;}
+.tmr-progress{height:100%;border-radius:3px;background:var(--amber);transition:width .5s linear, background .3s;}
+.tmr-score{font-size:.85rem;color:var(--cream2);line-height:1.6;max-width:360px;text-align:center;margin-bottom:2rem;}
+.tmr-btns{display:flex;gap:10px;}
+.btn-tmr-ctrl{font-family:var(--mono);font-size:12px;font-weight:700;padding:11px 24px;border-radius:var(--r-sm);cursor:pointer;letter-spacing:.05em;}
+.btn-tmr-pp{background:var(--amber);color:var(--ink);border:none;}
+.btn-tmr-pp:hover{background:#f0ac3a;}
+.btn-tmr-stop{background:transparent;color:var(--cream3);border:1px solid var(--border2);}
+.btn-tmr-stop:hover{color:var(--terra);border-color:rgba(196,92,56,.4);}
+.tmr-dur-picker{display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap;justify-content:center;}
+.dur-btn{font-family:var(--mono);font-size:11px;padding:6px 14px;border:1px solid var(--border2);border-radius:20px;background:transparent;color:var(--cream3);cursor:pointer;}
+.dur-btn.on{background:var(--ink4);color:var(--amber);border-color:rgba(232,160,48,.4);}
+
+/* type colors */
+.tc-echauffement{background:#7aad80;}
+.tc-activation{background:#e8a030;}
+.tc-ecoute{background:#b09a7a;}
+.tc-composition{background:#c45c38;}
+.tc-cypher{background:#e8c060;}
+.tc-duo{background:#7ab8d8;}
+.tc-groupe{background:#d87a48;}
+.tc-performance{background:#c878a0;}
+.tc-contrainte{background:#a08030;}
+.tc-spatial{background:#68a898;}
+.tc-relationnel{background:#a8c878;}
+.tc-somatique{background:#9878c8;}
+.tc-therapeutique{background:#c87898;}
+.tc-breathwork{background:#78b8c8;}
+.tc-meditation{background:#8898d8;}
+
+/* toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--amber);color:var(--ink);font-family:var(--mono);font-size:11px;font-weight:700;padding:8px 20px;border-radius:30px;z-index:600;transition:transform .3s ease;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ── EXAMPLES DRAWER ── */
+.ex-drawer{margin-top:10px;border-top:1px solid var(--border);}
+.ex-drawer-head{display:flex;align-items:center;justify-content:space-between;padding:8px 0 6px;cursor:pointer;}
+.ex-drawer-label{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dust);}
+.ex-drawer-toggle{font-size:11px;color:var(--cream3);}
+.ex-drawer-body{display:none;padding-bottom:4px;}
+.ex-drawer.open .ex-drawer-body{display:block;}
+.ex-drawer.open .ex-drawer-toggle{transform:rotate(180deg);}
+.examples-list{display:flex;flex-direction:column;gap:4px;}
+.example-item{display:flex;align-items:center;justify-content:space-between;background:var(--ink3);border-radius:6px;padding:7px 10px;gap:8px;}
+.example-text{font-size:12px;color:var(--cream2);flex:1;line-height:1.4;}
+.btn-draw{font-family:var(--mono);font-size:10px;font-weight:700;padding:4px 10px;border:1px solid rgba(232,160,48,.4);border-radius:20px;background:transparent;color:var(--amber);cursor:pointer;white-space:nowrap;}
+.btn-draw:hover{background:rgba(232,160,48,.1);}
+.drawn-item{background:rgba(232,160,48,.1);border:1px solid rgba(232,160,48,.25);border-radius:8px;padding:10px 12px;margin-bottom:8px;display:none;}
+.drawn-item.show{display:block;}
+.drawn-label{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:4px;}
+.drawn-text{font-size:13px;color:var(--cream);font-weight:500;line-height:1.5;}
+.btn-redraw{font-family:var(--mono);font-size:10px;padding:4px 10px;border:1px solid var(--border2);border-radius:20px;background:transparent;color:var(--cream3);cursor:pointer;margin-top:8px;}
+.btn-redraw:hover{color:var(--cream);}
+
+/* ── FORM BILINGUAL ── */
+.bilingual-note{font-size:11px;color:var(--cream3);background:var(--ink3);border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 11px;margin-bottom:.9rem;line-height:1.5;}
+.bilingual-note strong{color:var(--amber);}
+.lang-field-group{background:var(--ink3);border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden;margin-bottom:.9rem;}
+.lang-field-tab{display:flex;border-bottom:1px solid var(--border);}
+.lang-field-tab-btn{flex:1;font-family:var(--mono);font-size:10px;font-weight:700;padding:7px;background:transparent;border:none;color:var(--cream3);cursor:pointer;letter-spacing:.06em;}
+.lang-field-tab-btn.on{background:var(--ink4);color:var(--amber);}
+.lang-field-pane{display:none;padding:10px;}
+.lang-field-pane.on{display:block;}
+.lang-field-pane .flbl{margin-bottom:4px;}
+
+/* ── EXPORT MODAL ── */
+.export-modal{display:none;position:fixed;inset:0;background:rgba(13,12,10,.95);z-index:400;align-items:flex-end;justify-content:center;padding:0;}
+.export-modal.show{display:flex;}
+.export-sheet{background:var(--ink2);border-radius:18px 18px 0 0;padding:1.5rem;width:100%;max-width:500px;border-top:1px solid var(--border2);}
+.export-title{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cream3);margin-bottom:1rem;}
+.export-options{display:flex;flex-direction:column;gap:8px;margin-bottom:1rem;}
+.export-opt{display:flex;align-items:flex-start;gap:12px;background:var(--ink3);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;cursor:pointer;}
+.export-opt:hover{border-color:var(--border2);}
+.export-opt-icon{font-size:1.4rem;line-height:1;flex-shrink:0;}
+.export-opt-info{flex:1;}
+.export-opt-name{font-size:13px;font-weight:600;margin-bottom:2px;}
+.export-opt-desc{font-size:11px;color:var(--cream3);line-height:1.4;}
+.export-close{width:100%;padding:11px;font-family:var(--mono);font-size:11px;font-weight:700;background:transparent;border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--cream3);cursor:pointer;}
+.export-close:hover{color:var(--cream);}
+
+@media(max-width:540px){
+  .frow3{grid-template-columns:1fr 1fr;}
+  .tmr-display{font-size:3.5rem;}
+  .rh-name{font-size:1.15rem;}
+  .rh-score{font-size:.83rem;}
+  .main{padding:.85rem;}
+  .nb{font-size:10px;padding:0 10px;height:40px;}
+  .hdr{height:48px;}
+  .rand-hero{padding:1rem;}
+  .btn-roll{font-size:12px;}
+  .ex-head{padding:11px 12px;}
+  .ex-title{font-size:13px;}
+  /* bigger touch targets */
+  .btn-xs{padding:7px 13px;font-size:11px;}
+  .slot-tmr,.slot-rm{padding:6px 9px;}
+  .sess-slot{padding:10px;}
+  /* timer mobile */
+  .tmr-score{font-size:.8rem;}
+  .tmr-dur-picker{gap:6px;}
+  .dur-btn{font-size:10px;padding:5px 11px;}
+  .btn-tmr-ctrl{padding:11px 18px;}
+}
+@media print{
+  .hdr,.nav,.timer-overlay,.toast{display:none!important;}
+  body{background:white;color:black;}
+  .sess-hdr-btns{display:none;}
+  .slot-btns{display:none;}
+  .ex-card.open .ex-body{display:block!important;}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo">Groov'<em>O'</em>matiK</div>
+  <div class="hdr-r">
+    <div class="hdr-count"><b id="cnt">0</b> exercices</div>
+    <div class="lang-wrap">
+      <button class="lang-btn on" onclick="setLang('fr')">FR</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</header>
+
+<nav class="nav" id="main-nav">
+  <button class="nb on" onclick="goTab('random')" id="nb-random">⚡ RANDOM</button>
+  <button class="nb" onclick="goTab('t1')" id="nb-t1">01 ÉTAT</button>
+  <button class="nb" onclick="goTab('t2')" id="nb-t2">02 CONTRAINTES</button>
+  <button class="nb" onclick="goTab('t3')" id="nb-t3">03 ESPACE</button>
+  <button class="nb" onclick="goTab('t4')" id="nb-t4">04 RELATIONNEL</button>
+  <button class="nb" onclick="goTab('t5')" id="nb-t5">05 CYPHER</button>
+  <button class="nb" onclick="goTab('t6')" id="nb-t6">06 SOMATIQUE</button>
+  <button class="nb" onclick="goTab('catalog')" id="nb-catalog">TOUS</button>
+  <button class="nb" onclick="goTab('session')" id="nb-session">SESSION</button>
+  <button class="nb" onclick="goTab('add')" id="nb-add">+ AJOUTER</button>
+</nav>
+
+<main class="main">
+
+<!-- RANDOM -->
+<div id="v-random">
+  <div class="filter-bar" id="rf-bar"></div>
+  <div class="rand-hero" id="rh">
+    <div>
+      <div class="rh-badge"><div class="rh-dot" id="rh-dot"></div><span class="rh-type" id="rh-type"></span></div>
+      <div class="rh-table" id="rh-table"></div>
+      <div class="rh-name" id="rh-name"></div>
+      <div class="rh-score" id="rh-score"></div>
+    </div>
+    <div>
+      <div class="rh-pills" id="rh-pills"></div>
+    </div>
+  </div>
+  <div class="rand-btns">
+    <button class="btn-roll" id="btn-roll" onclick="doRoll()">🎲 AUTRE EXERCICE</button>
+    <button class="btn-tmr-rand" onclick="openTimerFromRandom()">⏱</button>
+    <button class="btn-add-rand" onclick="addFromRandom()">＋</button>
+  </div>
+</div>
+
+<!-- TABLES t1–t6 -->
+<div id="v-t1" style="display:none">
+  <div class="tbl-hdr"><div class="tbl-label" id="lb-t1">01</div><div class="tbl-name" id="nm-t1"></div><div class="tbl-desc" id="dc-t1"></div></div>
+  <div class="ex-list" id="list-t1"></div>
+</div>
+<div id="v-t2" style="display:none">
+  <div class="tbl-hdr"><div class="tbl-label" id="lb-t2">02</div><div class="tbl-name" id="nm-t2"></div><div class="tbl-desc" id="dc-t2"></div></div>
+  <div class="ex-list" id="list-t2"></div>
+</div>
+<div id="v-t3" style="display:none">
+  <div class="tbl-hdr"><div class="tbl-label" id="lb-t3">03</div><div class="tbl-name" id="nm-t3"></div><div class="tbl-desc" id="dc-t3"></div></div>
+  <div class="ex-list" id="list-t3"></div>
+</div>
+<div id="v-t4" style="display:none">
+  <div class="tbl-hdr"><div class="tbl-label" id="lb-t4">04</div><div class="tbl-name" id="nm-t4"></div><div class="tbl-desc" id="dc-t4"></div></div>
+  <div class="ex-list" id="list-t4"></div>
+</div>
+<div id="v-t5" style="display:none">
+  <div class="tbl-hdr"><div class="tbl-label" id="lb-t5">05</div><div class="tbl-name" id="nm-t5"></div><div class="tbl-desc" id="dc-t5"></div></div>
+  <div class="ex-list" id="list-t5"></div>
+</div>
+<div id="v-t6" style="display:none">
+  <div class="tbl-hdr"><div class="tbl-label" id="lb-t6">06</div><div class="tbl-name" id="nm-t6"></div><div class="tbl-desc" id="dc-t6"></div></div>
+  <div class="ex-list" id="list-t6"></div>
+</div>
+
+<!-- CATALOG -->
+<div id="v-catalog" style="display:none">
+  <div class="srch-wrap"><span class="srch-ico">🔍</span><input class="srch" id="srch" type="text" placeholder="Exercice, tag, intention, type…" oninput="renderCatalog()"></div>
+  <div class="filter-bar" id="cf-bar"></div>
+  <div class="ex-list" id="list-catalog"></div>
+</div>
+
+<!-- SESSION -->
+<div id="v-session" style="display:none">
+  <div class="sess-hdr">
+    <div class="sess-lbl" id="lbl-sess">SESSION EN COURS</div>
+    <div class="sess-hdr-btns">
+      <button class="btn-exp" onclick="openExport()" id="btn-export">↑ EXPORTER</button>
+      <button class="btn-exp" onclick="copySession()" id="btn-copy">COPIER</button>
+      <button class="btn-print" onclick="printSession()" id="btn-print">IMPRIMER</button>
+    </div>
+  </div>
+  <div id="sess-body"></div>
+</div>
+
+<!-- ADD -->
+<div id="v-add" style="display:none">
+  <div class="form-wrap">
+    <div class="bilingual-note" id="bi-note"><strong>Bilingue FR / EN</strong> — Saisis le nom et le score dans les deux langues pour que ta fiche soit complète quelle que soit la langue active. Seul le champ FR est obligatoire.</div>
+    <!-- nom bilingue -->
+    <div class="fgrp">
+      <label class="flbl" id="fl-name">Nom de l'exercice</label>
+      <div class="lang-field-group">
+        <div class="lang-field-tab">
+          <button class="lang-field-tab-btn on" onclick="switchLFTab('name','fr',this)">FR</button>
+          <button class="lang-field-tab-btn" onclick="switchLFTab('name','en',this)">EN</button>
+        </div>
+        <div class="lang-field-pane on" id="lfp-name-fr"><input class="finput" id="fn-fr" type="text" placeholder="Ex: Le bounce diagonal"></div>
+        <div class="lang-field-pane" id="lfp-name-en"><input class="finput" id="fn-en" type="text" placeholder="Ex: The diagonal bounce"></div>
+      </div>
+    </div>
+    <div class="frow">
+      <div class="fgrp"><label class="flbl" id="fl-type">Type</label>
+        <select class="fselect" id="ft">
+          <option value="echauffement">Échauffement</option><option value="activation">Activation</option><option value="ecoute">Écoute</option><option value="composition">Composition</option><option value="cypher">Cypher</option><option value="duo">Duo</option><option value="groupe">Groupe</option><option value="performance">Performance</option><option value="contrainte">Contrainte</option><option value="spatial">Spatial</option><option value="relationnel">Relationnel</option><option value="somatique">Somatique</option><option value="therapeutique">Thérapeutique</option><option value="breathwork">Breathwork</option><option value="meditation">Méditation</option>
+        </select>
+      </div>
+      <div class="fgrp"><label class="flbl" id="fl-table">Famille</label>
+        <select class="fselect" id="ftbl">
+          <option value="t1">01 Entrée en état</option><option value="t2">02 Contraintes</option><option value="t3">03 Espace</option><option value="t4">04 Relationnel</option><option value="t5">05 Cypher</option><option value="t6">06 Somatique</option>
+        </select>
+      </div>
+    </div>
+    <div class="fgrp"><label class="flbl" id="fl-int">Intention</label>
+      <select class="fselect" id="fi">
+        <option value="groove">Groove</option><option value="musicalité">Musicalité</option><option value="disponibilité">Disponibilité</option><option value="relation">Relation</option><option value="espace">Espace</option><option value="contraste">Contraste</option><option value="narration">Narration</option><option value="textures">Textures</option><option value="prise de risque">Prise de risque</option><option value="libération">Libération</option><option value="ancrage">Ancrage</option><option value="intégration">Intégration</option>
+      </select>
+    </div>
+    <!-- score bilingue -->
+    <div class="fgrp">
+      <label class="flbl" id="fl-score">Score / Règle du jeu</label>
+      <div class="lang-field-group">
+        <div class="lang-field-tab">
+          <button class="lang-field-tab-btn on" onclick="switchLFTab('score','fr',this)">FR</button>
+          <button class="lang-field-tab-btn" onclick="switchLFTab('score','en',this)">EN</button>
+        </div>
+        <div class="lang-field-pane on" id="lfp-score-fr"><textarea class="ftextarea" id="fs-fr" placeholder="Décris la règle en 1 à 3 phrases…"></textarea></div>
+        <div class="lang-field-pane" id="lfp-score-en"><textarea class="ftextarea" id="fs-en" placeholder="Describe the rule in 1 to 3 sentences…"></textarea></div>
+      </div>
+    </div>
+    <div class="frow3">
+      <div class="fgrp"><label class="flbl" id="fl-lv">Niveau</label><select class="fselect" id="flv"><option value="beginner">Débutant</option><option value="intermediate">Intermédiaire</option><option value="advanced">Avancé</option></select></div>
+      <div class="fgrp"><label class="flbl" id="fl-dur">Durée (min)</label><input class="finput" id="fdur" type="number" min="1" max="120" value="10"></div>
+      <div class="fgrp"><label class="flbl" id="fl-ppl">Participants</label><select class="fselect" id="fppl"><option value="solo">Solo</option><option value="duo">Duo</option><option value="trio">Trio</option><option value="groupe">Groupe</option><option value="tous">Tous</option></select></div>
+    </div>
+    <div class="fgrp"><label class="flbl" id="fl-ctr">Contraintes & Variables</label><input class="finput" id="fctr" type="text" placeholder="Ex: musique lente, modifier le tempo…"></div>
+    <div class="fgrp"><label class="flbl" id="fl-tags">Tags</label><div class="tag-box" id="tag-sel"></div></div>
+    <button class="btn-submit" onclick="submitEx()" id="btn-sub">AJOUTER</button>
+    <div class="f-ok" id="f-ok">✓ EXERCICE AJOUTÉ À LA BASE</div>
+  </div>
+</div>
+
+</main><!-- /main -->
+
+<!-- EXPORT MODAL -->
+<div class="export-modal" id="export-modal">
+  <div class="export-sheet">
+    <div class="export-title" id="exp-title">EXPORTER / INSTALLER</div>
+    <div class="export-options">
+      <div class="export-opt" onclick="doPrint()">
+        <div class="export-opt-icon">🖨️</div>
+        <div class="export-opt-info">
+          <div class="export-opt-name" id="exp-print-name">Imprimer la session</div>
+          <div class="export-opt-desc" id="exp-print-desc">Ouvre une fenêtre d'impression avec toutes les fiches de ta session en cours.</div>
+        </div>
+      </div>
+      <div class="export-opt" onclick="doCopy()">
+        <div class="export-opt-icon">📋</div>
+        <div class="export-opt-info">
+          <div class="export-opt-name" id="exp-copy-name">Copier la session</div>
+          <div class="export-opt-desc" id="exp-copy-desc">Copie le texte de la session pour l'envoyer par message, email ou Notes.</div>
+        </div>
+      </div>
+      <div class="export-opt" onclick="closeExport()">
+        <div class="export-opt-icon">📱</div>
+        <div class="export-opt-info">
+          <div class="export-opt-name" id="exp-app-name">Installer comme app (iPhone/Android)</div>
+          <div class="export-opt-desc" id="exp-app-desc">iPhone : ouvre ce fichier dans Safari → partager → "Sur l'écran d'accueil". Android : Chrome → menu ⋮ → "Ajouter à l'écran d'accueil". Fonctionne sans connexion.</div>
+        </div>
+      </div>
+    </div>
+    <button class="export-close" onclick="closeExport()" id="exp-close">FERMER</button>
+  </div>
+</div>
+
+<!-- TIMER OVERLAY -->
+<div class="timer-overlay" id="tmr-overlay">
+  <div class="tmr-ex-name" id="tmr-exname"></div>
+  <div class="tmr-display" id="tmr-display">00:00</div>
+  <div class="tmr-progress-wrap"><div class="tmr-progress" id="tmr-bar" style="width:100%"></div></div>
+  <div class="tmr-score" id="tmr-score"></div>
+  <div class="tmr-dur-picker" id="tmr-picker"></div>
+  <div class="tmr-btns">
+    <button class="btn-tmr-ctrl btn-tmr-pp" id="tmr-pp" onclick="timerToggle()">▶ START</button>
+    <button class="btn-tmr-ctrl btn-tmr-stop" onclick="timerClose()">✕ FERMER</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════ STRINGS ════════════════
+const S = {
+  fr:{
+    roll:'🎲 AUTRE EXERCICE',
+    tabs:['⚡ RANDOM','01 ÉTAT','02 CONTRAINTES','03 ESPACE','04 RELATIONNEL','05 CYPHER','06 SOMATIQUE','TOUS','SESSION','+ AJOUTER'],
+    tnames:{t1:'Entrée en état',t2:'Contraintes & Règles',t3:'Composition spatiale',t4:'Jeux relationnels',t5:'Cypher & Performance',t6:'Somatique & Thérapeutique'},
+    tdescs:{
+      t1:'Respiration, marche, disponibilité — arriver dans le corps et préparer le groupe.',
+      t2:'Limitations volontaires qui libèrent : sans bras, niveau imposé, interdiction de répéter…',
+      t3:'Statues, architectures collectives, diagonales, zones vides, entrées/sorties de scène.',
+      t4:'Follower/leader, contact, réaction, composition à plusieurs, observation.',
+      t5:'Cypher classique, battle pédagogique, scores ouverts, missions secrètes.',
+      t6:'5Rythmes, TRE, breathwork, méditation dansée, trauma release, ancrage.'
+    },
+    types:{echauffement:'Échauffement',activation:'Activation',ecoute:'Écoute',composition:'Composition',cypher:'Cypher',duo:'Duo',groupe:'Groupe',performance:'Performance',contrainte:'Contrainte',spatial:'Spatial',relationnel:'Relationnel',somatique:'Somatique',therapeutique:'Thérapeutique',breathwork:'Breathwork',meditation:'Méditation'},
+    levels:{beginner:'Débutant',intermediate:'Intermédiaire',advanced:'Avancé'},
+    people:{solo:'Solo',duo:'Duo',trio:'Trio',groupe:'Groupe',tous:'Tous'},
+    intentions:{groove:'Groove',musicalité:'Musicalité',disponibilité:'Disponibilité',relation:'Relation',espace:'Espace',contraste:'Contraste',narration:'Narration',textures:'Textures','prise de risque':'Prise de risque',libération:'Libération',ancrage:'Ancrage',intégration:'Intégration'},
+    lbl_score:'SCORE',lbl_ctr:'CONTRAINTES',lbl_int:'INTENTION',lbl_tags:'TAGS',
+    sess:'SESSION EN COURS',copy:'COPIER',print:'IMPRIMER',
+    add_sess:'+ SESSION',start_tmr:'⏱ TIMER',
+    sess_empty:'Navigue dans les tables, déroule un exercice et appuie sur + SESSION.',
+    copy_ok:'Session copiée !',add_ok:'Ajouté à la session',
+    submit:'AJOUTER',form_ok:'✓ EXERCICE AJOUTÉ À LA BASE',
+    allTypes:'Tous types',allTables:'Toutes familles',
+    srch_ph:'Exercice, tag, intention, type…',
+    tmr_start:'▶ START',tmr_pause:'⏸ PAUSE',tmr_resume:'▶ REPRENDRE',tmr_end:'Terminé !',
+    fl:{name:'Nom de l\'exercice',type:'Type',table:'Famille',int:'Intention',score:'Score / Règle du jeu',lv:'Niveau',dur:'Durée (min)',ppl:'Participants',ctr:'Contraintes & Variables',tags:'Tags'},
+    totex:'exercices', totmin:'min totales',
+  },
+  en:{
+    roll:'🎲 NEXT EXERCISE',
+    tabs:['⚡ RANDOM','01 WARM UP','02 CONSTRAINTS','03 SPACE','04 RELATIONAL','05 CYPHER','06 SOMATIC','ALL','SESSION','+ ADD'],
+    tnames:{t1:'Warm-up & Arrival',t2:'Constraint Games',t3:'Spatial Composition',t4:'Relational Games',t5:'Cypher & Performance',t6:'Somatic & Therapeutic'},
+    tdescs:{
+      t1:'Breathing, walking, availability — arriving in the body and warming up the group.',
+      t2:'Voluntary limitations that liberate: no arms, imposed level, never repeat…',
+      t3:'Statues, collective architectures, diagonals, empty zones, stage entrances/exits.',
+      t4:'Follower/leader, contact, reaction, group composition, observation.',
+      t5:'Classic cypher, pedagogical battle, open scores, secret missions.',
+      t6:'5Rhythms, TRE, breathwork, dance meditation, trauma release, grounding.'
+    },
+    types:{echauffement:'Warm-up',activation:'Activation',ecoute:'Listening',composition:'Composition',cypher:'Cypher',duo:'Duo',groupe:'Group',performance:'Performance',contrainte:'Constraint',spatial:'Spatial',relationnel:'Relational',somatique:'Somatic',therapeutique:'Therapeutic',breathwork:'Breathwork',meditation:'Meditation'},
+    levels:{beginner:'Beginner',intermediate:'Intermediate',advanced:'Advanced'},
+    people:{solo:'Solo',duo:'Duo',trio:'Trio',groupe:'Group',tous:'All'},
+    intentions:{groove:'Groove',musicalité:'Musicality',disponibilité:'Availability',relation:'Relation',espace:'Space',contraste:'Contrast',narration:'Narration',textures:'Textures','prise de risque':'Risk-taking',libération:'Liberation',ancrage:'Grounding',intégration:'Integration'},
+    lbl_score:'SCORE',lbl_ctr:'CONSTRAINTS',lbl_int:'INTENTION',lbl_tags:'TAGS',
+    sess:'CURRENT SESSION',copy:'COPY',print:'PRINT',
+    add_sess:'+ SESSION',start_tmr:'⏱ TIMER',
+    sess_empty:'Browse the tables, expand an exercise and press + SESSION.',
+    copy_ok:'Session copied!',add_ok:'Added to session',
+    submit:'ADD EXERCISE',form_ok:'✓ EXERCISE ADDED',
+    allTypes:'All types',allTables:'All families',
+    srch_ph:'Exercise, tag, intention, type…',
+    tmr_start:'▶ START',tmr_pause:'⏸ PAUSE',tmr_resume:'▶ RESUME',tmr_end:'Done!',
+    fl:{name:'Exercise name',type:'Type',table:'Family',int:'Intention',score:'Score / Rule',lv:'Level',dur:'Duration (min)',ppl:'Participants',ctr:'Constraints & Variables',tags:'Tags'},
+    totex:'exercises', totmin:'total min',
+  }
+};
+
+// ════════════════ COLORS ════════════════
+const TC = {echauffement:'#7aad80',activation:'#e8a030',ecoute:'#b09a7a',composition:'#c45c38',cypher:'#e8c060',duo:'#7ab8d8',groupe:'#d87a48',performance:'#c878a0',contrainte:'#a08030',spatial:'#68a898',relationnel:'#a8c878',somatique:'#9878c8',therapeutique:'#c87898',breathwork:'#78b8c8',meditation:'#8898d8'};
+function tc(t){return TC[t]||'#888';}
+
+// ════════════════ DATABASE ════════════════
+const ALL_TAGS = ['pieds','bassin','colonne','bras','regard','respiration','isolations','rebond','bounce','rock','flow','groove','footwork','pauses','variations','texture','contraste','répétition','accumulation','interruption','réponse','canon','unisson','boucle','centre','périphérie','diagonale','niveaux','distance','orientation','trajectoires','solo','duo','trio','groupe','leader','follower','écoute','imitation','beat','contretemps','silence','accents','tempo','qualité','cypher','traversée','score','battle','mission','débutant','avancé','safe','énergisant','introspectif','performatif','TRE','somatique','breathwork','ancrage','trauma','libération'];
+
+let DB = [
+// ═══ T1 ENTRÉE EN ÉTAT ═══
+{id:1,table:'t1',type:'echauffement',nf:'Groove Walk',ne:'Groove Walk',int:'groove',sf:'Marche dans l\'espace en laissant le rebond remonter des pieds jusqu\'au bassin. À chaque pas, sens le bounce naturel. Change de direction chaque fois que tu croises le regard de quelqu\'un.',se:'Walk through space letting the bounce rise from feet to hips with each step. Feel the natural rebound. Change direction each time you make eye contact.',lv:'beginner',dur:8,ppl:'groupe',cf:'Musique groove 80–95 BPM. Variable : ajouter isolation des épaules, changer le tempo.',ce:'Groove music 80–95 BPM. Variable: add shoulder isolation, change tempo.',tags:['pieds','rebond','bounce','groove','beat','débutant','énergisant']},
+{id:2,table:'t1',type:'echauffement',nf:'Scan espace & Freeze',ne:'Space scan & Freeze',int:'disponibilité',sf:'Marche librement. Au signal, freeze total. Immobile, scanne l\'espace : qui est devant, derrière, à quelle distance ? Reprends. Recommence de ta propre initiative.',se:'Walk freely. On signal, total freeze. Still, scan the space: who\'s in front, behind, at what distance? Resume. Start again on your own initiative.',lv:'beginner',dur:10,ppl:'groupe',cf:'Silence ou drone. Variable : freeze en solo choisi, yeux fermés.',ce:'Silence or drone. Variable: self-initiated freeze, eyes closed.',tags:['regard','respiration','solo','écoute','silence','débutant','safe']},
+{id:3,table:'t1',type:'echauffement',nf:'Respiration collective',ne:'Collective breathing',int:'disponibilité',sf:'Debout dans l\'espace. Inspirez ensemble sur 4 temps, expirez sur 4. Laissez la respiration générer un micro-mouvement : balancement, élévation, affaissement. Ne pas chercher à danser — sentir seulement.',se:'Standing in space. Inhale together for 4 counts, exhale for 4. Let breath generate micro-movement: swaying, rising, sinking. Don\'t try to dance — just feel.',lv:'beginner',dur:7,ppl:'groupe',cf:'Silence total. Variable : allonger les cycles, ajouter un son à l\'expir.',ce:'Complete silence. Variable: lengthen cycles, add sound on exhale.',tags:['respiration','colonne','rebond','solo','silence','débutant','introspectif','safe']},
+{id:4,table:'t1',type:'activation',nf:'Activation des isolations',ne:'Isolation activation',int:'groove',sf:'Isole chaque zone séquentiellement : tête, épaules, poitrine, bassin, genoux, pieds — 8 temps par zone. Puis combine deux zones simultanément. Cherche la précision avant la vitesse.',se:'Isolate each zone sequentially: head, shoulders, chest, hips, knees, feet — 8 counts each. Then combine two zones simultaneously. Seek precision before speed.',lv:'beginner',dur:10,ppl:'tous',cf:'Groove 90–100 BPM. Variable : rythme imposé par l\'animateur.',ce:'Groove 90–100 BPM. Variable: rhythm imposed by facilitator.',tags:['isolations','bassin','colonne','groove','beat','débutant','énergisant']},
+{id:5,table:'t1',type:'echauffement',nf:'Shake & Release',ne:'Shake & Release',int:'disponibilité',sf:'Secoue chaque partie du corps 30 sec dans l\'ordre : mains, bras, épaules, torse, hanches, jambes, pieds, puis tout le corps ensemble. Lâche les tensions. Termine par un moment d\'immobilité consciente.',se:'Shake each body part for 30 sec in order: hands, arms, shoulders, torso, hips, legs, feet, then the whole body. Release tension. End with a moment of conscious stillness.',lv:'beginner',dur:6,ppl:'tous',cf:'Silence ou musique joyeuse. Variable : son avec chaque shake.',ce:'Silence or joyful music. Variable: add a sound to each shake.',tags:['respiration','rebond','isolations','débutant','safe','énergisant']},
+{id:6,table:'t1',type:'echauffement',nf:'Marche à tempo / contretemps',ne:'On-beat / off-beat walk',int:'musicalité',sf:'Marche exactement sur le tempo pendant 2 min. Puis marche uniquement sur le contretemps pendant 2 min. Observe comment l\'expérience du corps change selon la relation au beat.',se:'Walk exactly on the beat for 2 min. Then walk only on the offbeat for 2 min. Notice how your body\'s experience changes with each relationship to the beat.',lv:'beginner',dur:8,ppl:'groupe',cf:'Hip hop mid-tempo. Variable : alterner chaque 8 temps.',ce:'Mid-tempo hip hop. Variable: alternate every 8 counts.',tags:['pieds','beat','contretemps','tempo','groove','débutant','énergisant']},
+{id:7,table:'t1',type:'echauffement',nf:'Balancement & Rebond vertical',ne:'Swing & Vertical bounce',int:'groove',sf:'Pieds parallèles, genoux fléchis. Balancement gauche/droite, avant/arrière. Le rebond vient de la flexion des genoux. Trouve le point où c\'est le corps qui bouge et non la tête qui décide.',se:'Feet parallel, knees bent. Swing side to side, then forward/back. The bounce comes from knee flexion. Find the point where the body moves and the head doesn\'t decide.',lv:'beginner',dur:6,ppl:'tous',cf:'Mid-tempo. Variable : varier l\'amplitude, les bras.',ce:'Mid-tempo. Variable: vary amplitude, arm gestures.',tags:['pieds','bassin','rebond','bounce','groove','beat','débutant','safe','énergisant']},
+{id:8,table:'t1',type:'activation',nf:'Activation → Jam 30 sec',ne:'Activation → 30 sec jam',int:'prise de risque',sf:'30 secondes d\'activation physique intense (sauts, agitation totale). Arrêt net au signal. Freestyle immédiat de 30 secondes. Exploite l\'énergie brute du corps activé.',se:'30 seconds of intense activation (jumping, full-body shaking). Sharp stop on signal. Immediate 30-second freestyle. Harness the raw energy of the activated body.',lv:'beginner',dur:5,ppl:'groupe',cf:'Beat fort. Variable : varier l\'activation (agitation, toprock, sol).',ce:'Strong beat. Variable: vary activation style.',tags:['rebond','groove','flow','beat','solo','énergisant','performatif']},
+{id:9,table:'t1',type:'echauffement',nf:'Scan corporel en marche',ne:'Walking body scan',int:'disponibilité',sf:'Marche lentement. L\'animateur nomme des parties du corps une à une. Pour chaque partie nommée, porte ton attention sur ses sensations 30 secondes tout en continuant à marcher.',se:'Walk slowly. The facilitator names body parts one by one. For each part named, focus your attention on its sensations for 30 seconds while continuing to walk.',lv:'beginner',dur:10,ppl:'groupe',cf:'Silence ou drone très léger. Variable : yeux mi-clos.',ce:'Silence or very light drone. Variable: eyes half-closed.',tags:['respiration','regard','pieds','bassin','colonne','débutant','introspectif','safe']},
+{id:10,table:'t1',type:'echauffement',nf:'Polyrhythme corps/pieds',ne:'Body/feet polyrhythm',int:'musicalité',sf:'Assigne un rythme simple aux pieds (pulse régulier). Superpose un rythme plus complexe ou syncopé avec le buste et les bras. Les deux parties du corps jouent simultanément et indépendamment.',se:'Assign a simple rhythm to the feet (regular pulse). Layer a more complex or syncopated rhythm with the chest and arms. Both body parts play simultaneously and independently.',lv:'intermediate',dur:12,ppl:'tous',cf:'Hip hop avec production riche. Variable : varier les couples de zones.',ce:'Hip hop with rich production. Variable: vary the zone pairings.',tags:['isolations','beat','contretemps','tempo','groove','intermédiaire','musicalité']},
+
+// ═══ T2 CONTRAINTES ═══
+{id:11,table:'t2',type:'contrainte',nf:'Interdiction d\'une habitude',ne:'Forbidden habit',int:'contraste',sf:'Chaque danseur identifie son geste le plus automatique (son "tic chorégraphique"). Pendant tout l\'exercice, ce mouvement est strictement interdit. Que reste-t-il ? Qu\'émerge-t-il à la place ?',se:'Each dancer identifies their most automatic gesture (their choreographic tic). For the entire exercise, that movement is strictly forbidden. What remains? What emerges instead?',lv:'intermediate',dur:12,ppl:'tous',cf:'Musique au choix. Variable : interdire deux habitudes simultanément.',ce:'Any music. Variable: forbid two habits at once.',tags:['flow','variations','contraste','solo','écoute','introspectif','performatif']},
+{id:12,table:'t2',type:'contrainte',nf:'Sans bras',ne:'No arms',int:'espace',sf:'Improvise avec les bras collés au corps ou croisés sur la poitrine. Le reste doit compenser : bassin, pieds, regard, colonne, niveaux. Observer comment chaque partie s\'exprime plus fort sans les bras.',se:'Improvise with arms flat along the body or crossed over the chest. The rest must compensate: hips, feet, gaze, spine, levels. Notice how each part expresses more strongly without arms.',lv:'intermediate',dur:10,ppl:'tous',cf:'Groovy. Variable : sans jambes (statique), sans regard.',ce:'Groovy. Variable: no legs (stationary), no gaze.',tags:['bassin','pieds','regard','colonne','contraste','variations','niveaux','énergisant']},
+{id:13,table:'t2',type:'contrainte',nf:'Niveau imposé',ne:'Forced level',int:'espace',sf:'L\'animateur annonce un niveau : au sol, genou, debout, en hauteur. Tous improvisent à ce niveau. Changements toutes les 30 secondes. Cherche la qualité à chaque contrainte.',se:'The facilitator calls a level: floor, knee, standing, elevated. Everyone improvises at that level. Changes approximately every 30 sec. Find quality within each constraint.',lv:'beginner',dur:10,ppl:'groupe',cf:'Musique variée. Variable : chacun choisit son propre niveau.',ce:'Varied music. Variable: each chooses their own level.',tags:['niveaux','colonne','pieds','contraste','score','débutant','énergisant']},
+{id:14,table:'t2',type:'contrainte',nf:'Ne jamais répéter',ne:'Never repeat',int:'contraste',sf:'Règle absolue : chaque geste ne peut être fait qu\'une seule fois. Dès qu\'un mouvement est produit, il est épuisé. Force à aller chercher hors du vocabulaire connu.',se:'Absolute rule: each gesture can only be made once. Once a movement is made, it\'s exhausted. Forces you to reach outside your known vocabulary.',lv:'advanced',dur:10,ppl:'solo',cf:'Silence ou musique. Variable : une répétition autorisée.',ce:'Silence or music. Variable: one repetition allowed.',tags:['variations','contraste','interruption','flow','solo','avancé','introspectif','performatif']},
+{id:15,table:'t2',type:'contrainte',nf:'Mot d\'énergie',ne:'Energy word',int:'textures',sf:'L\'animateur tire un mot : lent, explosif, liquide, cassé, électrique, collant, flottant, martelé, poreux, cristallisé… Le danseur incarne ce mot dans tout son corps pendant 2 min. Puis switch vers le contraire.',se:'The facilitator draws a word: slow, explosive, liquid, broken, electric, sticky, floating, hammered, porous, crystallized… The dancer embodies this word throughout their body for 2 min. Then switch to the opposite.',lv:'beginner',dur:10,ppl:'tous',cf:'Musique adaptée. Variable : deux mots simultanés contradictoires.',ce:'Matching music. Variable: two simultaneous contradictory words.',tags:['flow','texture','qualité','contraste','solo','débutant','performatif','énergisant']},
+{id:16,table:'t2',type:'contrainte',nf:'Ralenti / Accéléré',ne:'Slow motion / Fast forward',int:'musicalité',sf:'Improvise en ralenti extrême 2 min (chaque geste prend 10x plus de temps). Puis accélération maximale. Alterne à volonté. Observer l\'effet sur la présence et la lisibilité.',se:'Improvise in extreme slow motion for 2 min (each gesture takes 10x longer). Then maximum acceleration. Alternate at will. Notice the effect on presence and legibility.',lv:'intermediate',dur:10,ppl:'tous',cf:'Silence ou musique très lente/rapide. Variable : inversion du groupe.',ce:'Silence or very slow/fast music. Variable: group inversion.',tags:['tempo','qualité','contraste','flow','variations','performatif']},
+{id:17,table:'t2',type:'contrainte',nf:'Musique vs Contre-musique',ne:'Music vs counter-music',int:'musicalité',sf:'2 min exactement dans la musique. Puis 2 min en refusant délibérément la musique — rythme différent, qualité opposée. Ressentir la tension créative entre les deux états.',se:'2 min being exactly IN the music. Then 2 min deliberately REFUSING it — different rhythm, opposite quality. Feel the creative tension between both states.',lv:'advanced',dur:12,ppl:'solo',cf:'Hip hop mid-tempo. Variable : groupe partagé en deux camps.',ce:'Mid-tempo hip hop. Variable: group split into two camps.',tags:['beat','contretemps','tempo','contraste','flow','avancé','performatif','introspectif']},
+{id:18,table:'t2',type:'composition',nf:'Phrase → Variation → Rupture',ne:'Phrase → Variation → Break',int:'narration',sf:'Construis une phrase de 8 temps, répète-la 3 fois avec une légère variation à chaque fois (amplitude, vitesse, niveau), puis romps radicalement avec quelque chose d\'inattendu.',se:'Build an 8-beat phrase, repeat it 3 times with a slight variation each time (amplitude, speed, level), then break radically with something unexpected.',lv:'intermediate',dur:15,ppl:'solo',cf:'Hip hop. Variable : rupture collective simultanée.',ce:'Hip hop. Variable: collective simultaneous break.',tags:['répétition','variations','interruption','contraste','groove','flow','performatif']},
+{id:19,table:'t2',type:'contrainte',nf:'Concept Seeding',ne:'Concept Seeding',int:'textures',sf:'Commence le freestyle avec un seul concept abstrait ("glitch", "effondrement", "rebond", "fil de soie"...). Pendant tout le morceau, chaque mouvement doit être une interprétation de ce concept. Explore les textures et dynamiques.',se:'Start the freestyle with a single abstract concept ("glitch", "collapse", "rebound", "silk thread"...). Throughout the track, every movement must interpret that concept. Explore textures and dynamics.',lv:'intermediate',dur:10,ppl:'tous',cf:'Hip hop ou électro. Variable : tirer le concept au hasard.',ce:'Hip hop or electronic. Variable: draw the concept randomly.',tags:['flow','texture','contraste','groove','solo','performatif','introspectif']},
+{id:20,table:'t2',type:'contrainte',nf:'Décalage rythmique',ne:'Rhythmic displacement',int:'musicalité',sf:'Improvise délibérément légèrement en avance sur le beat (pousser l\'énergie) pendant 2 min. Puis légèrement en retard (traîner, tension). Affine ta relation au temps musical au-delà du simple calage.',se:'Improvise deliberately slightly ahead of the beat (pushing the energy) for 2 min. Then slightly behind it (dragging, tension). Refine your relationship to musical time beyond simple beat-matching.',lv:'advanced',dur:12,ppl:'solo',cf:'Hip hop mid-tempo. Variable : varier par 8 temps.',ce:'Mid-tempo hip hop. Variable: vary every 8 counts.',tags:['beat','contretemps','tempo','groove','flow','avancé','performatif','musicalité']},
+
+// ═══ T3 ESPACE ═══
+{id:21,table:'t3',type:'spatial',nf:'Architecture collective',ne:'Collective architecture',int:'espace',sf:'Un à un, chaque danseur entre, prend une position en relation à ceux déjà là, et se fige. Quand tout le groupe est en place, chacun repart à son rythme. Observer la sculpture vivante.',se:'One by one, each dancer enters, takes a position in relation to those already there, and freezes. When the whole group is in place, each person leaves at their own pace. Observe the living sculpture.',lv:'beginner',dur:15,ppl:'groupe',cf:'Silence ou drone. Variable : départ du mouvement depuis les statues.',ce:'Silence or drone. Variable: start moving from the statues.',tags:['niveaux','centre','périphérie','orientation','unisson','groupe','score','débutant','performatif']},
+{id:22,table:'t3',type:'spatial',nf:'Zones d\'énergie',ne:'Energy zones',int:'espace',sf:'Trois zones dans l\'espace : intense / neutre / calme. Chaque zone impose une qualité de mouvement. Improvise en te laissant guider par la zone où tu es.',se:'Three zones in space: intense / neutral / calm. Each zone imposes a movement quality. Improvise letting the zone you\'re in guide you.',lv:'beginner',dur:12,ppl:'groupe',cf:'Musique variée. Variable : renommer les zones en cours.',ce:'Varied music. Variable: rename zones mid-exercise.',tags:['distance','orientation','centre','périphérie','contraste','texture','score','débutant','énergisant']},
+{id:23,table:'t3',type:'spatial',nf:'Entrées & Sorties de scène',ne:'Stage entrances & exits',int:'narration',sf:'Un espace scénique est délimité. Travaille ton entrée (de quelle coulisse ? à quelle vitesse ? avec quelle intention ?) et ta sortie. L\'entrée et la sortie sont aussi importantes que ce qui se passe entre.',se:'A performance space is delimited. Work your entrance (from which wing? at what speed? with what intention?) and your exit. Entrance and exit are as important as what happens in between.',lv:'intermediate',dur:20,ppl:'solo',cf:'Musique ou silence. Variable : traversée avec mission secrète.',ce:'Music or silence. Variable: crossing with a secret mission.',tags:['trajectoires','orientation','centre','périphérie','narration','score','traversée','performatif']},
+{id:24,table:'t3',type:'spatial',nf:'Diagonales libres',ne:'Free diagonals',int:'espace',sf:'Déplace-toi uniquement sur les diagonales de l\'espace. À chaque coin, décide : rester, tourner, croiser. Les angles droits sont interdits.',se:'Travel only on the diagonals of the space. At each corner, decide: stay, turn, cross. Right angles are forbidden.',lv:'beginner',dur:10,ppl:'groupe',cf:'Hip hop. Variable : diagonales à deux simultanément.',ce:'Hip hop. Variable: two people crossing simultaneously.',tags:['diagonale','trajectoires','pieds','footwork','centre','périphérie','débutant','énergisant']},
+{id:25,table:'t3',type:'composition',nf:'Statue + ajout progressif',ne:'Statue + progressive addition',int:'accumulation',sf:'Une personne entre et se fige. La suivante entre, crée une statue en réponse visuelle, et se fige. Continue jusqu\'au groupe entier. Défaire dans l\'ordre inverse.',se:'One person enters and freezes. The next enters, creates a statue in visual response, and freezes. Continue until the whole group is in statue. Unfreeze in reverse order.',lv:'beginner',dur:15,ppl:'groupe',cf:'Silence. Variable : départ du mouvement depuis les statues.',ce:'Silence. Variable: start moving from statues.',tags:['niveaux','orientation','accumulation','unisson','groupe','score','débutant','safe','performatif']},
+{id:26,table:'t3',type:'spatial',nf:'Vide habité',ne:'Inhabited void',int:'espace',sf:'Remplis les espaces vides laissés par les autres sans jamais les envahir. Chacun est à la fois créateur d\'espaces et répondant aux espaces créés. Observer comment le groupe respire collectivement.',se:'Fill the empty spaces left by others without ever invading them. Each person creates and responds to spaces. Observe how the group breathes collectively.',lv:'intermediate',dur:12,ppl:'groupe',cf:'Ambient ou silence. Variable : une zone interdite.',ce:'Ambient or silence. Variable: one forbidden zone.',tags:['distance','centre','périphérie','écoute','groupe','score','orientation','introspectif']},
+{id:27,table:'t3',type:'composition',nf:'Accumulation spatiale',ne:'Spatial accumulation',int:'accumulation',sf:'Le premier fait une phrase de 2 temps en boucle. Le second ajoute sa propre phrase de 2 temps en relation au premier. Continue jusqu\'à saturation. Observer la partition vivante.',se:'The first makes a 2-beat looping phrase. The second adds their own 2-beat phrase in relation to the first. Continue until saturation. Observe the living score.',lv:'advanced',dur:20,ppl:'groupe',cf:'Drone ambient. Variable : chaque ajout modifie les précédents.',ce:'Ambient drone. Variable: each addition modifies those before it.',tags:['accumulation','répétition','boucle','canon','groupe','avancé','performatif']},
+{id:28,table:'t3',type:'spatial',nf:'Traversée à mission',ne:'Mission crossing',int:'narration',sf:'Chaque danseur reçoit une mission secrète pour sa traversée : "Tu transportes quelque chose de fragile", "Tu cherches quelqu\'un", "Tu fuis sans le montrer". Le groupe observe et devine.',se:'Each dancer receives a secret mission for their crossing: "You\'re carrying something fragile", "You\'re searching for someone", "You\'re fleeing without showing it." The group watches and guesses.',lv:'beginner',dur:15,ppl:'groupe',cf:'Musique ou silence. Variable : missions tirées au sort.',ce:'Music or silence. Variable: missions drawn randomly.',tags:['trajectoires','regard','narration','mission','traversée','tirage au sort','solo','débutant','performatif']},
+
+// ═══ T4 RELATIONNEL ═══
+{id:29,table:'t4',type:'relationnel',nf:'Follow the Leader',ne:'Follow the Leader',int:'relation',sf:'Un leader improvise, les autres suivent avec un délai de 2–3 temps. Le leadership passe par un signal (regard ou geste) toutes les 30 secondes environ, sans annonce verbale.',se:'One leader improvises, others follow with a 2–3 beat delay. Leadership passes via signal (gaze or gesture) approximately every 30 sec, without verbal announcement.',lv:'beginner',dur:12,ppl:'groupe',cf:'Groove. Variable : plusieurs leaders simultanés.',ce:'Groove. Variable: multiple simultaneous leaders.',tags:['imitation','écoute','leader','follower','regard','groupe','débutant','énergisant']},
+{id:30,table:'t4',type:'duo',nf:'Réponse en miroir',ne:'Mirror response',int:'relation',sf:'Face à face. L\'un improvise, l\'autre reflète en miroir (gauche/droite inversés). Cherchez le moment où vous ne savez plus qui mène. Laissez le leadership flotter.',se:'Face to face. One improvises, the other mirrors (left/right inverted). Find the moment where neither knows who\'s leading. Let leadership float.',lv:'beginner',dur:10,ppl:'duo',cf:'Lent puis progressif. Variable : dos à dos.',ce:'Slow then progressive. Variable: back to back.',tags:['imitation','écoute','duo','follower','leader','regard','débutant','introspectif']},
+{id:31,table:'t4',type:'relationnel',nf:'Switch extrême',ne:'Extreme switch',int:'contraste',sf:'En duo. L\'un high energy, l\'autre low energy. Au signal "switch", échange instantané et radical. Observer comment le corps absorbe l\'inversion d\'énergie.',se:'In pairs. One high energy, one low energy. On signal "switch", instant and radical exchange. Notice how the body absorbs the energy inversion.',lv:'intermediate',dur:10,ppl:'duo',cf:'Musique contrastée. Variable : switch sans signal, par choix.',ce:'Contrasted music. Variable: switch without signal, by choice.',tags:['contraste','écoute','duo','groove','flow','énergisant','performatif']},
+{id:32,table:'t4',type:'relationnel',nf:'Canon à retard',ne:'Delayed canon',int:'accumulation',sf:'Le premier improvise librement. Le second reprend exactement ses mouvements avec un délai de 4 temps. Le troisième reprend ceux du second avec 4 temps de délai. Une vague chorégraphique.',se:'The first improvises freely. The second repeats their movements with a 4-beat delay. The third repeats the second\'s with a 4-beat delay. A choreographic wave.',lv:'advanced',dur:15,ppl:'trio',cf:'Mid-tempo. Variable : varier le délai.',ce:'Mid-tempo. Variable: vary the delay.',tags:['canon','répétition','imitation','écoute','trio','beat','avancé','performatif']},
+{id:33,table:'t4',type:'duo',nf:'Point de contact mobile (CI)',ne:'Moving contact point (CI)',int:'relation',sf:'Deux danseurs maintiennent un point de contact physique qui peut se déplacer sur les corps. Le contact ne se rompt jamais. Ni l\'un ni l\'autre ne dirige. Écouter les micro-ajustements de pression.',se:'Two dancers maintain a physical contact point that can move across their bodies. Contact never breaks. Neither person directs. Listen to micro-adjustments of pressure.',lv:'intermediate',dur:12,ppl:'duo',cf:'Doux ou silence. Variable : ajouter un troisième point.',ce:'Soft or silence. Variable: add a third contact point.',tags:['écoute','duo','follower','bras','colonne','relation','safe','introspectif']},
+{id:34,table:'t4',type:'groupe',nf:'Observation → Direction',ne:'Observation → Direction',int:'relation',sf:'Moitié du groupe improvise. L\'autre moitié observe en cercle. Chaque observateur choisit mentalement un sujet et lui envoie de l\'énergie par le regard. Switch. Débrieffez : a-t-on senti quelque chose ?',se:'Half the group improvises. The other half observes in a circle. Each observer mentally chooses a subject and sends them energy through their gaze. Switch. Debrief: did you feel anything?',lv:'intermediate',dur:15,ppl:'groupe',cf:'Mid-tempo. Variable : observateur peut intervenir.',ce:'Mid-tempo. Variable: observer can intervene.',tags:['regard','écoute','groupe','solo','relation','introspectif','performatif']},
+{id:35,table:'t4',type:'duo',nf:'Danse Contact — Rolling Point',ne:'Contact Dance — Rolling Point',int:'relation',sf:'Commence avec la pulpe de l\'index contre celle du partenaire. Quelques grammes de pression. Laisse le point de contact rouler (pas glisser) sur les corps. Progressivement augmente le poids partagé. Les portés émergent d\'eux-mêmes.',se:'Start with the pad of your index finger against your partner\'s. A few grams of pressure. Let the contact point roll (not slide) across the bodies. Gradually increase shared weight. Lifts emerge by themselves.',lv:'intermediate',dur:15,ppl:'duo',cf:'Doux ou silence. Variable : passer à la paume puis à l\'épaule.',ce:'Soft or silence. Variable: progress to palm then shoulder.',tags:['bras','écoute','duo','follower','relation','safe','introspectif']},
+{id:36,table:'t4',type:'groupe',nf:'Unisson par écoute',ne:'Listening unison',int:'relation',sf:'Le groupe improvise séparément. Objectif implicite : arriver à l\'unisson sans consigne, juste par l\'écoute et la proposition. Personne ne commande. L\'unisson émerge (ou non) organiquement.',se:'The group improvises separately. Implicit goal: arrive at unison without instruction, just through listening and proposing. No one commands. Unison emerges (or not) organically.',lv:'advanced',dur:15,ppl:'groupe',cf:'Musique structurée. Variable : objectif rupture collective.',ce:'Structured music. Variable: objective is collective break.',tags:['unisson','écoute','groupe','canon','beat','avancé','performatif','introspectif']},
+{id:37,table:'t4',type:'duo',nf:'Question / Réponse',ne:'Question / Answer',int:'relation',sf:'En duo. Le premier improvise 4 temps (la question). Le second répond avec 4 temps. Retour. Le dialogue doit être réel : écouter avant de répondre. Pas de préparation pendant que l\'autre parle.',se:'In pairs. The first improvises for 4 beats (the question). The second responds with 4 beats. Then back. The dialogue must be real: listen before answering. No preparation while the other speaks.',lv:'beginner',dur:12,ppl:'duo',cf:'Hip hop mi-tempo. Variable : la réponse doit contraster.',ce:'Mid-tempo hip hop. Variable: the response must contrast.',tags:['réponse','écoute','duo','groove','beat','débutant','énergisant']},
+{id:38,table:'t4',type:'groupe',nf:'Contagion d\'énergie',ne:'Energy contagion',int:'textures',sf:'Un danseur commence avec une qualité très précise (robot, tremblant, liquide…). Il touche l\'épaule de quelqu\'un qui attrape son énergie. Progressivement tout le groupe est contaminé. Puis mutation vers autre chose.',se:'One dancer starts with a very precise quality (robot, shaking, liquid…). They touch someone\'s shoulder who catches their energy. Gradually the whole group is contaminated. Then mutation.',lv:'beginner',dur:12,ppl:'groupe',cf:'Musique adaptée. Variable : deux énergies concurrentes.',ce:'Matching music. Variable: two competing energies.',tags:['texture','écoute','groupe','imitation','relation','débutant','énergisant']},
+{id:39,table:'t4',type:'duo',nf:'Partage de poids — contrebalance',ne:'Weight sharing — counterbalance',int:'relation',sf:'Face à face, saisissez les avant-bras. Cherchez le point d\'équilibre exact où si vous lâchez, vous tomberiez en arrière. Explorez le mouvement depuis ce contrebalance. Laissez les pieds voyager.',se:'Face to face, clasp forearms. Find the exact balance point where if you let go, you\'d each fall back. Explore movement from this counterbalance. Let the feet travel.',lv:'beginner',dur:10,ppl:'duo',cf:'Doux ou silence. Variable : switching multiple partenaires.',ce:'Soft or silence. Variable: switch to multiple partners.',tags:['bras','écoute','duo','follower','relation','safe','débutant']},
+
+// ═══ T5 CYPHER & PERFORMANCE ═══
+{id:40,table:'t5',type:'cypher',nf:'Cypher classique',ne:'Classic cypher',int:'groove',sf:'Le groupe forme un cercle. Un danseur entre, improvise 8 temps ou une phrase, sort. Un autre entre. Personne ne force le passage — l\'entrée se fait par désir. L\'énergie du cercle nourrit le centre.',se:'The group forms a circle. One dancer enters, improvises for 8 beats or one phrase, exits. Another enters. No one forces the turn — entry happens by desire. The circle\'s energy feeds the center.',lv:'beginner',dur:15,ppl:'groupe',cf:'Hip hop ou trap. Variable : duos au centre.',ce:'Hip hop or trap. Variable: duos in the center.',tags:['cypher','groove','flow','beat','groupe','solo','débutant','énergisant','performatif']},
+{id:41,table:'t5',type:'cypher',nf:'Cypher à mission secrète',ne:'Secret mission cypher',int:'prise de risque',sf:'Avant le cypher, chaque danseur tire une mission : "Rends hommage à quelqu\'un du cercle", "Commence au sol", "Finit par un freeze de 8 temps"... Les autres devinent la mission après.',se:'Before the cypher, each dancer draws a mission: "Pay tribute to someone in the circle", "Start from the floor", "End with an 8-beat freeze"... Others guess the mission afterward.',lv:'intermediate',dur:20,ppl:'groupe',cf:'Hip hop varié. Variable : missions tirées en direct.',ce:'Varied hip hop. Variable: missions drawn live.',tags:['cypher','mission','tirage au sort','groove','solo','groupe','performatif','énergisant']},
+{id:42,table:'t5',type:'performance',nf:'Battle pédagogique',ne:'Pedagogical battle',int:'prise de risque',sf:'Deux équipes s\'affrontent en échanges de 8 temps. Règles : pas de violence, on répond à l\'énergie de l\'autre. Débrieffez sur ce qui a créé du dialogue vs de la confrontation.',se:'Two teams exchange 8-beat turns. Rules: no violence, respond to the other\'s energy. Debrief on what created dialogue vs confrontation.',lv:'intermediate',dur:25,ppl:'groupe',cf:'Hip hop battle. Variable : règle de réponse thématique.',ce:'Hip hop battle. Variable: thematic response rule.',tags:['cypher','battle','groove','flow','réponse','groupe','énergisant','performatif']},
+{id:43,table:'t5',type:'performance',nf:'Showcase 1 minute',ne:'1-minute showcase',int:'narration',sf:'2 min de préparation. Puis une pièce de 1 minute avec une ouverture consciente et une fermeture consciente. Pas une chorégraphie — une intention dramaturgique dans l\'improvisation.',se:'2 min of preparation. Then a 1-minute piece with a conscious opening and closing. Not choreography — a dramaturgical intention within improvisation.',lv:'advanced',dur:30,ppl:'solo',cf:'Musique au choix. Variable : sans musique.',ce:'Dancer\'s choice of music. Variable: no music.',tags:['narration','flow','groove','score','solo','avancé','performatif','introspectif']},
+{id:44,table:'t5',type:'cypher',nf:'Cypher en silence',ne:'Silent cypher',int:'disponibilité',sf:'Un cypher sans musique. Le silence révèle : la respiration, les frottements, les appuis. La présence doit se suffire à elle-même.',se:'A cypher with no music. Silence reveals: breathing, friction, weight shifts. Presence must stand alone.',lv:'advanced',dur:15,ppl:'groupe',cf:'Silence total. Variable : sons corporels uniquement.',ce:'Complete silence. Variable: body sounds only.',tags:['cypher','silence','groove','flow','respiration','avancé','introspectif','performatif']},
+{id:45,table:'t5',type:'cypher',nf:'Cypher réponse directe',ne:'Direct response cypher',int:'relation',sf:'Chaque danseur au centre DOIT répondre à ce qu\'a fait le précédent — continuer son énergie, la contredire, ou en prendre un élément précis.',se:'Every dancer in the center MUST respond to what the previous dancer did — continue their energy, contradict it, or take one precise element from it.',lv:'intermediate',dur:20,ppl:'groupe',cf:'Hip hop. Variable : réponse uniquement au niveau du sol.',ce:'Hip hop. Variable: response only at floor level.',tags:['cypher','réponse','écoute','groove','relation','groupe','performatif']},
+{id:46,table:'t5',type:'performance',nf:'Score ouvert — Entrée libre',ne:'Open score — Free entry',int:'prise de risque',sf:'L\'espace est ouvert. Pas d\'ordre, pas de signal. Chacun entre quand il veut, reste aussi longtemps qu\'il veut, sort quand il veut.',se:'The space is open. No order, no signal. Each person enters when they want, stays as long as they want, exits when they want.',lv:'advanced',dur:20,ppl:'groupe',cf:'Ambient léger ou beat discret. Variable : une zone off-limits.',ce:'Light ambient or quiet beat. Variable: one off-limits zone.',tags:['score','cypher','performance','groupe','solo','avancé','performatif','prise de risque']},
+{id:47,table:'t5',type:'performance',nf:'Cypher Narratif',ne:'Narrative cypher',int:'narration',sf:'Chaque danseur construit un solo avec une structure narrative consciente : début, développement, climax, résolution. Même dans une improvisation de 16 temps, cherche à raconter quelque chose.',se:'Each dancer builds a solo with a conscious narrative structure: beginning, development, climax, resolution. Even in a 16-beat improv, try to tell something.',lv:'advanced',dur:25,ppl:'groupe',cf:'Hip hop ou musique à structure claire. Variable : thème narratif commun.',ce:'Hip hop or clearly structured music. Variable: shared narrative theme.',tags:['narration','groove','flow','cypher','solo','avancé','performatif','introspectif']},
+
+// ═══ T6 SOMATIQUE & THÉRAPEUTIQUE ═══
+{id:48,table:'t6',type:'somatique',nf:'5 Rythmes — La Vague (Flowing)',ne:'5 Rhythms — The Wave (Flowing)',int:'disponibilité',sf:'Flowing : mouvement continu, fluide, circulaire. Laisse les pieds planter des racines. Les cercles et les spirales viennent d\'eux-mêmes. Aucun moment d\'arrêt — la danse est un seul courant continu.',se:'Flowing: continuous, fluid, circular movement. Let the feet take root. Circles and spirals come by themselves. No stopping — the dance is one continuous current.',lv:'beginner',dur:15,ppl:'tous',cf:'Musique lente, organique, basses profondes. Variable : fermer les yeux.',ce:'Slow, organic music, deep bass. Variable: close eyes.',tags:['pieds','bassin','flow','tempo','qualité','silence','débutant','introspectif','somatique','safe']},
+{id:49,table:'t6',type:'somatique',nf:'5 Rythmes — Staccato',ne:'5 Rhythms — Staccato',int:'textures',sf:'Staccato : angles, arêtes, projections vers l\'extérieur. C\'est l\'exhalation, le feu, l\'action. Ton corps dessine des formes nettes et définies dans l\'espace. La discipline devient inspiration.',se:'Staccato: angles, edges, projections outward. It\'s the exhale, fire, action. Your body draws sharp, defined shapes in space. Discipline becomes inspiration.',lv:'beginner',dur:12,ppl:'tous',cf:'Beats marqués, hip hop percussif. Variable : isolation des angles.',ce:'Marked beats, percussive hip hop. Variable: isolate the angles.',tags:['bras','colonne','contraste','beat','accents','énergisant','somatique']},
+{id:50,table:'t6',type:'therapeutique',nf:'5 Rythmes — Chaos',ne:'5 Rhythms — Chaos',int:'libération',sf:'Chaos : la tête tombe, le poids descend, le contrôle se relâche. Laisse le corps faire ce qu\'il veut sans censure. C\'est la tristesse, l\'adolescence, le savoir. Autorise-toi à ne pas être beau.',se:'Chaos: the head drops, weight descends, control releases. Let the body do whatever it wants without censorship. It\'s sadness, puberty, knowing. Allow yourself to not look good.',lv:'intermediate',dur:15,ppl:'tous',cf:'Musique dense, chaotique, rythmique. Variable : 30 sec maximum de chaos.',ce:'Dense, chaotic, rhythmic music. Variable: max 30 sec of chaos.',tags:['colonne','respiration','qualité','libération','introspectif','somatique','therapeutique']},
+{id:51,table:'t6',type:'somatique',nf:'5 Rythmes — Lyrical & Stillness',ne:'5 Rhythms — Lyrical & Stillness',int:'intégration',sf:'Lyrical : légèreté, joie, envol — le corps libéré plane dans l\'espace. Puis Stillness : le mouvement se miniaturise. Des gestes infimes, la respiration visible. Se poser, intégrer.',se:'Lyrical: lightness, joy, soaring — the freed body glides through space. Then Stillness: movement miniaturizes. Tiny gestures, visible breathing. Settle, integrate.',lv:'intermediate',dur:20,ppl:'tous',cf:'Musique légère puis silence. Variable : terminer allongé.',ce:'Light music then silence. Variable: end lying down.',tags:['respiration','flow','qualité','silence','introspectif','somatique','safe','intégration']},
+{id:52,table:'t6',type:'therapeutique',nf:'Tremblement conscient (TRE)',ne:'Conscious trembling (TRE)',int:'libération',sf:'Allonge-toi sur le dos, genoux fléchis, pieds à plat. Soulève légèrement les hanches et tiens 2 min pour fatiguer les psoas. Pose les hanches. Laisse venir les tremblements naturels sans les contrôler. Observe seulement.',se:'Lie on your back, knees bent, feet flat. Slightly lift the hips and hold for 2 min to fatigue the psoas. Lower the hips. Let natural trembling come without controlling it. Just observe.',lv:'beginner',dur:15,ppl:'tous',cf:'Silence ou musique très douce. Variable : position debout appuyé au mur.',ce:'Silence or very soft music. Variable: standing position against a wall.',tags:['respiration','colonne','TRE','somatique','trauma','libération','safe','introspectif','débutant']},
+{id:53,table:'t6',type:'breathwork',nf:'Breathwork — Libération en mouvement',ne:'Breathwork — Liberation through movement',int:'libération',sf:'Inspirations actives et rapides par la bouche (2-2-1 : deux petites inspirations et une longue expiration), le mouvement suit la respiration spontanément. 3 cycles de 5 min : activation / relâchement / intégration.',se:'Active, rapid mouth breathing (2-2-1: two short inhales and one long exhale), movement spontaneously follows the breath. 3 cycles of 5 min: activation / release / integration.',lv:'intermediate',dur:20,ppl:'tous',cf:'Musique évolutive (crescendo). Variable : en duo synchronisé.',ce:'Evolving music (crescendo). Variable: synchronized duet.',tags:['respiration','breathwork','libération','trauma','somatique','introspectif','safe']},
+{id:54,table:'t6',type:'somatique',nf:'Ancrage — Les racines',ne:'Grounding — The roots',int:'ancrage',sf:'Debout, pieds nus si possible. Sens le sol sous tes pieds. Respire en imaginant des racines qui descendent depuis tes pieds vers le centre de la terre. Micro-oscillation. Ce sol te soutient.',se:'Standing, barefoot if possible. Feel the floor under your feet. Breathe imagining roots descending from your feet to the center of the earth. Micro-oscillation. This floor supports you.',lv:'beginner',dur:8,ppl:'tous',cf:'Drone grave, sons de nature. Variable : yeux fermés, mouvement.',ce:'Low drone, nature sounds. Variable: eyes closed, movement.',tags:['pieds','respiration','ancrage','somatique','safe','introspectif','débutant']},
+{id:55,table:'t6',type:'meditation',nf:'Méditation dansée',ne:'Dance meditation',int:'disponibilité',sf:'La respiration devient mouvement, le mouvement devient danse. Assis ou debout, commence par sentir le souffle bouger dans le corps. Laisse ce mouvement grandir organiquement sans jamais décider.',se:'Breath becomes movement, movement becomes dance. Seated or standing, begin by feeling the breath move in the body. Let this movement grow organically without ever deciding.',lv:'beginner',dur:15,ppl:'tous',cf:'Silence ou musique très douce. Variable : groupe synchronisé par la respiration.',ce:'Silence or very soft music. Variable: group synchronized by breath.',tags:['respiration','silence','flow','somatique','meditation','introspectif','safe','débutant']},
+{id:56,table:'t6',type:'therapeutique',nf:'Rage libérée',ne:'Released rage',ne:'Released rage',int:'libération',sf:'Crée un espace sécurisé et délimité. Donne-toi la permission d\'exprimer la colère, la frustration ou l\'intensité refoulée par le mouvement. Pas de violence vers les autres. Le sol, l\'espace et le son t\'appartiennent.',se:'Create a safe, delimited space. Give yourself permission to express anger, frustration, or suppressed intensity through movement. No violence toward others. The floor, space, and sound are yours.',lv:'intermediate',dur:10,ppl:'tous',cf:'Musique intense, basses profondes. Variable : en silence total.',ce:'Intense music, deep bass. Variable: complete silence.',tags:['respiration','libération','trauma','therapeutique','somatique','introspectif','énergisant']},
+{id:57,table:'t6',type:'therapeutique',nf:'Joie brute — Permission de ressentir',ne:'Raw joy — Permission to feel',int:'libération',sf:'Rappelle-toi un moment de joie intense. Laisse ce souvenir remonter dans le corps comme une sensation physique. Autorise-toi à l\'exprimer sans retenue — sourire, rire, pleurs de joie, tout est permis.',se:'Recall a moment of intense joy. Let that memory rise in the body as a physical sensation. Allow yourself to express it without restraint — smiling, laughing, joyful tears, all is welcome.',lv:'beginner',dur:10,ppl:'tous',cf:'Musique joyeuse et libre. Variable : partager avec un partenaire.',ce:'Joyful, free music. Variable: share with a partner.',tags:['respiration','libération','somatique','therapeutique','introspectif','énergisant','safe','débutant']},
+{id:58,table:'t6',type:'somatique',nf:'Mouvement authentique',ne:'Authentic movement',int:'disponibilité',sf:'Un danseur se déplace les yeux fermés, sans chercher à faire quoi que ce soit. Un témoin observe en silence. Après 5 min, le témoin partage ce qu\'il a vu sans interpréter. Puis switch.',se:'One dancer moves with eyes closed, not trying to do anything. A witness observes in silence. After 5 min, the witness shares what they saw without interpreting. Then switch.',lv:'intermediate',dur:20,ppl:'duo',cf:'Silence ou sons doux. Variable : groupe entier yeux fermés, un témoin.',ce:'Silence or soft sounds. Variable: whole group eyes closed, one witness.',tags:['respiration','regard','solo','écoute','somatique','meditation','introspectif','safe']},
+{id:59,table:'t6',type:'breathwork',nf:'Cohérence cardiaque dansée',ne:'Danced cardiac coherence',int:'ancrage',sf:'Inspire 5 secondes, expire 5 secondes. Laisse ce rythme respiratoire générer un mouvement de balancement ou d\'oscillation. Reste dans cette qualité 10 min. Observer le calme qui s\'installe.',se:'Inhale 5 seconds, exhale 5 seconds. Let this breathing rhythm generate a swaying or oscillating movement. Stay in this quality for 10 min. Notice the calm that settles.',lv:'beginner',dur:10,ppl:'tous',cf:'Silence ou musique 60 BPM. Variable : en groupe synchronisé.',ce:'Silence or 60 BPM music. Variable: synchronized group.',tags:['respiration','breathwork','ancrage','somatique','safe','introspectif','débutant']},
+{id:60,table:'t6',type:'therapeutique',nf:'Danse avec son ombre',ne:'Dancing with your shadow',int:'narration',sf:'Trouve un endroit avec de la lumière. Improvise avec ton ombre comme partenaire. L\'ombre exagère, déforme, prolonge. Engage le dialogue entre toi et ta version projetée.',se:'Find a spot with light. Improvise with your shadow as a partner. The shadow exaggerates, distorts, extends. Engage the dialogue between yourself and your projected version.',lv:'beginner',dur:10,ppl:'solo',cf:'Lumière de côté ou lampe. Variable : en duo avec vos ombres.',ce:'Side light or lamp. Variable: duet with your shadows.',tags:['regard','narration','solo','somatique','introspectif','débutant','performatif']},
+{id:61,table:'t6',type:'therapeutique',nf:'Intégration finale — Atterrissage',ne:'Closing integration — Landing',int:'intégration',sf:'En fin de session. Allonge-toi ou assieds-toi. 5 min de silence. Laisse le corps s\'immobiliser progressivement. Puis partage en cercle une image ou un mot qui capture ce que tu emportes.',se:'End of session. Lie or sit. 5 min of silence. Let the body gradually still. Then share in a circle one image or word that captures what you\'re taking with you.',lv:'beginner',dur:10,ppl:'groupe',cf:'Silence absolu. Variable : partage par le geste.',ce:'Absolute silence. Variable: share through gesture.',tags:['respiration','silence','ancrage','somatique','intégration','safe','introspectif','débutant']},
+{id:62,table:'t6',type:'somatique',nf:'Roulade de colonne',ne:'Spine roll',int:'disponibilité',sf:'Debout, pied parallèles. Laisse la tête tomber en avant, et vertebre par vertèbre, roule vers le sol. Reste un moment suspendu, bras lourds. Remonte vertebre par vertebre. Répète 5 fois. Libère la compression.',se:'Standing, feet parallel. Let the head drop forward, and vertebra by vertebra, roll toward the floor. Hang a moment, arms heavy. Ascend vertebra by vertebra. Repeat 5 times. Release compression.',lv:'beginner',dur:8,ppl:'tous',cf:'Silence ou drone. Variable : ajouter mouvement sur le sol.',ce:'Silence or drone. Variable: add floor movement.',tags:['colonne','respiration','somatique','safe','introspectif','débutant','ancrage']},
+{id:63,table:'t6',type:'meditation',nf:'Rituel d\'ouverture collectif',ne:'Collective opening ritual',int:'disponibilité',sf:'En cercle, debout, les mains jointes ou proches. Trois respirations communes. Chacun pose une intention en silence. L\'animateur clôt le cercle par un son ou un geste. Le groupe entre ensemble dans la session.',se:'In a circle, standing, hands joined or close. Three shared breaths. Each person sets an intention in silence. The facilitator closes the circle with a sound or gesture. The group enters the session together.',lv:'beginner',dur:5,ppl:'groupe',cf:'Silence total. Variable : chacun nomme son intention à voix haute.',ce:'Complete silence. Variable: each names their intention aloud.',tags:['respiration','silence','ancrage','groupe','somatique','meditation','safe','débutant','introspectif']},
+];
+
+// ════════════════ STATE ════════════════
+let lang = 'fr';
+let tab = 'random';
+let session = [];
+let randId = null;
+let rfFilter = '';
+let cfFilter = {type:'', table:''};
+let timer = {active:false, paused:false, total:0, remaining:0, exId:null, interval:null};
+
+// ════════════════ LANG ════════════════
+function setLang(l){
+  lang=l;
+  document.querySelectorAll('.lang-btn').forEach((b,i)=>b.classList.toggle('on',['fr','en'][i]===l));
+  document.getElementById('btn-roll').textContent=t('roll');
+  document.getElementById('lbl-sess').textContent=t('sess');
+  document.getElementById('btn-copy').textContent=t('copy');
+  document.getElementById('btn-print').textContent=t('print');
+  document.getElementById('btn-sub').textContent=t('submit');
+  document.getElementById('f-ok').textContent=t('form_ok');
+  document.getElementById('srch').placeholder=t('srch_ph');
+  if(tab==='random') renderRandom(randId);
+  else if(tab.startsWith('t')) renderTable(tab);
+  else if(tab==='catalog') renderCatalog();
+  else if(tab==='session') renderSession();
+}
+function t(k){return S[lang][k]||k;}
+function tn(k){return S[lang].tnames[k]||k;}
+function td(k){return S[lang].tdescs[k]||k;}
+function ttype(k){return S[lang].types[k]||k;}
+function tlv(k){return S[lang].levels[k]||k;}
+function tppl(k){return S[lang].people[k]||k;}
+function tint(k){return S[lang].intentions[k]||k;}
+function gn(ex){return lang==='fr'?ex.nf:ex.ne;}
+function gs(ex){return lang==='fr'?ex.sf:ex.se;}
+function gc(ex){return lang==='fr'?ex.cf:ex.ce;}
+
+// ════════════════ NAVIGATION ════════════════
+function goTab(id){
+  tab=id;
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('nb-'+id).classList.add('on');
+  const views=['random','t1','t2','t3','t4','t5','t6','catalog','session','add'];
+  views.forEach(v=>{const el=document.getElementById('v-'+v);if(el)el.style.display=v===id?'block':'none';});
+  if(id.startsWith('t')) renderTable(id);
+  else if(id==='catalog') renderCatalog();
+  else if(id==='session') renderSession();
+  else if(id==='random') initRandom();
+  else if(id==='add') renderTagSel();
+}
+
+// ════════════════ RANDOM ════════════════
+function initRandom(){
+  renderRFilters();
+  doRoll();
+}
+function renderRFilters(){
+  const bar=document.getElementById('rf-bar');
+  const types=[...new Set(DB.map(e=>e.type))];
+  bar.innerHTML=`<button class="fchip${rfFilter===''?' on':''}" onclick="setRF('')">TOUS</button>`
+    +types.map(tp=>`<button class="fchip${rfFilter===tp?' on':''}" onclick="setRF('${tp}')" style="border-color:${tc(tp)}44">${ttype(tp).toUpperCase()}</button>`).join('');
+}
+function setRF(v){rfFilter=v;renderRFilters();doRoll();}
+function doRoll(){
+  const pool=rfFilter?DB.filter(e=>e.type===rfFilter):DB;
+  const ex=pool[Math.floor(Math.random()*pool.length)];
+  randId=ex.id;
+  renderRandom(ex.id);
+}
+function renderRandom(id){
+  const ex=DB.find(e=>e.id===id);if(!ex)return;
+  randId=id;
+  document.getElementById('rh-dot').className='rh-dot';document.getElementById('rh-dot').style.background=tc(ex.type);
+  document.getElementById('rh-type').textContent=ttype(ex.type).toUpperCase();
+  document.getElementById('rh-table').textContent=tn(ex.table);
+  document.getElementById('rh-name').textContent=gn(ex);
+  document.getElementById('rh-score').textContent=gs(ex);
+  document.getElementById('rh-pills').innerHTML=lvPill(ex.lv)+`<span class="pill">${ex.dur} min</span><span class="pill">${tppl(ex.ppl)}</span><span class="pill pill-amber">${tint(ex.int)}</span>`+(ex.tags||[]).slice(0,3).map(tg=>`<span class="pill" style="border-color:${tc(ex.type)}44">${tg}</span>`).join('');
+}
+function addFromRandom(){if(!randId)return;session.push({...DB.find(e=>e.id===randId)});toast(t('add_ok'));}
+function openTimerFromRandom(){if(!randId)return;openTimer(randId);}
+
+// ════════════════ TABLES ════════════════
+function renderTable(tid){
+  document.getElementById('nm-'+tid).textContent=tn(tid);
+  document.getElementById('dc-'+tid).textContent=td(tid);
+  const list=document.getElementById('list-'+tid);
+  const exs=DB.filter(e=>e.table===tid);
+  list.innerHTML=exs.map(ex=>card(ex,tid)).join('');
+}
+function renderCatalog(){
+  const q=document.getElementById('srch').value.toLowerCase();
+  // catalog filters
+  const cfb=document.getElementById('cf-bar');
+  const types=[...new Set(DB.map(e=>e.type))];
+  cfb.innerHTML=`<button class="fchip${cfFilter.type===''?' on':''}" onclick="setCF('type','')">TOUS</button>`
+    +types.map(tp=>`<button class="fchip${cfFilter.type===tp?' on':''}" onclick="setCF('type','${tp}')" style="border-color:${tc(tp)}44">${ttype(tp).toUpperCase()}</button>`).join('');
+  const filtered=DB.filter(ex=>{
+    if(cfFilter.type&&ex.type!==cfFilter.type)return false;
+    if(!q)return true;
+    return [gn(ex),gs(ex),(ex.tags||[]).join(' '),ex.int,ttype(ex.type)].join(' ').toLowerCase().includes(q);
+  });
+  const list=document.getElementById('list-catalog');
+  list.innerHTML=filtered.length?filtered.map(ex=>card(ex,'cat')).join(''):`<div class="empty">AUCUN RÉSULTAT</div>`;
+}
+function setCF(k,v){cfFilter[k]=v;renderCatalog();}
+
+// ════════════════ CARD ════════════════
+function lvPill(lv){return`<span class="pill pill-${lv}">${tlv(lv)}</span>`;}
+function examplesDrawer(ex){
+  const data=EXAMPLES[ex.id];
+  if(!data)return'';
+  const items=lang==='fr'?data.items_fr:data.items_en;
+  const lbl=lang==='fr'?data.lbl_fr:data.lbl_en;
+  const drawLbl=lang==='fr'?'🎲 Tirer':'🎲 Draw';
+  const allLbl=lang==='fr'?'VOIR TOUS':'SEE ALL';
+  return`<div class="ex-drawer" id="drw-${ex.id}">
+  <div class="ex-drawer-head" onclick="toggleDrawer(${ex.id})">
+    <span class="ex-drawer-label">🎲 ${lbl}</span>
+    <span class="ex-drawer-toggle">⌄</span>
+  </div>
+  <div class="ex-drawer-body">
+    <div class="drawn-item" id="drawn-${ex.id}">
+      <div class="drawn-label">${lang==='fr'?'TIRAGE':'DRAWN'}</div>
+      <div class="drawn-text" id="drawn-text-${ex.id}"></div>
+      <button class="btn-redraw" onclick="event.stopPropagation();drawOne(${ex.id})">${lang==='fr'?'🎲 Encore un':'🎲 Another'}</button>
+    </div>
+    <div style="display:flex;gap:7px;margin-bottom:8px">
+      <button class="btn-draw" onclick="event.stopPropagation();drawOne(${ex.id})">${drawLbl}</button>
+    </div>
+    <div class="examples-list">${items.map(item=>`<div class="example-item"><span class="example-text">${item}</span></div>`).join('')}</div>
+  </div>
+</div>`;
+}
+function toggleDrawer(exId){
+  const el=document.getElementById('drw-'+exId);
+  if(el){el.classList.toggle('open');const tog=el.querySelector('.ex-drawer-toggle');if(tog)tog.style.transform=el.classList.contains('open')?'rotate(180deg)':'';}
+}
+function drawOne(exId){
+  const data=EXAMPLES[exId];if(!data)return;
+  const items=lang==='fr'?data.items_fr:data.items_en;
+  const idx=Math.floor(Math.random()*items.length);
+  drawState[exId]=idx;
+  const textEl=document.getElementById('drawn-text-'+exId);
+  const boxEl=document.getElementById('drawn-'+exId);
+  if(textEl)textEl.textContent=items[idx];
+  if(boxEl)boxEl.classList.add('show');
+  // ensure drawer is open
+  const drw=document.getElementById('drw-'+exId);
+  if(drw&&!drw.classList.contains('open'))drw.classList.add('open');
+}
+function card(ex,ctx){
+  const color=tc(ex.type);
+  return`<div class="ex-card" id="ec-${ctx}-${ex.id}" onclick="toggleCard('${ctx}',${ex.id})">
+  <div class="ex-head">
+    <div class="ex-dot" style="background:${color}"></div>
+    <div class="ex-title">${gn(ex)}</div>
+    <div class="ex-rpills">${lvPill(ex.lv)}<span class="pill">${ex.dur}m</span>${ex.custom?'<span class="pill pill-amber">★</span>':''}</div>
+    <div class="ex-chev">⌄</div>
+  </div>
+  <div class="ex-body">
+    <div class="ex-sec"><div class="ex-lbl">${t('lbl_score')}</div><div class="ex-txt">${gs(ex)}</div></div>
+    <div class="ex-sec"><div class="ex-lbl">${t('lbl_ctr')}</div><div class="ex-txt">${gc(ex)}</div></div>
+    <div class="ex-sec"><div class="ex-lbl">${t('lbl_int')}</div><div class="ex-txt">${tint(ex.int)}</div></div>
+    <div class="ex-tags">${(ex.tags||[]).map(tg=>`<span class="pill" style="border-color:${color}44">${tg}</span>`).join('')}</div>
+    ${examplesDrawer(ex)}
+    <div class="ex-acts">
+      <button class="btn-xs btn-sess" onclick="event.stopPropagation();addToSess(${ex.id})">${t('add_sess')}</button>
+      <button class="btn-xs btn-tmr" onclick="event.stopPropagation();openTimer(${ex.id})">${t('start_tmr')}</button>
+    </div>
+  </div></div>`;
+}
+function toggleCard(ctx,id){
+  const el=document.getElementById(`ec-${ctx}-${id}`);
+  if(el)el.classList.toggle('open');
+}
+
+// ════════════════ SESSION ════════════════
+function addToSess(id){
+  const ex=DB.find(e=>e.id===id);
+  if(ex){session.push({...ex});toast(t('add_ok'));}
+}
+function renderSession(){
+  const body=document.getElementById('sess-body');
+  if(!session.length){
+    body.innerHTML=`<div class="sess-empty"><div class="sess-empty-ico">📋</div>${t('sess_empty')}</div>`;
+    return;
+  }
+  const total=session.reduce((a,e)=>a+e.dur,0);
+  body.innerHTML=`<div class="sess-list">${session.map((ex,i)=>`
+    <div class="sess-slot">
+      <div class="slot-n">${i+1}</div>
+      <div class="slot-info">
+        <div class="slot-name">${gn(ex)}</div>
+        <div class="slot-meta">${ttype(ex.type)} · ${tlv(ex.lv)} · ${ex.dur} min · ${tppl(ex.ppl)}</div>
+      </div>
+      <div class="slot-btns">
+        <button class="slot-tmr" onclick="openTimer(${ex.id})" title="Timer">⏱</button>
+        <button class="slot-rm" onclick="rmFromSess(${i})">✕</button>
+      </div>
+    </div>`).join('')}
+  </div>
+  <div class="sess-stats">
+    <div class="stat-item"><div class="stat-n">${session.length}</div><div class="stat-l">${t('totex')}</div></div>
+    <div class="stat-item"><div class="stat-n">${total}</div><div class="stat-l">${t('totmin')}</div></div>
+  </div>`;
+}
+function rmFromSess(i){session.splice(i,1);renderSession();}
+function printSession(){
+  const lines=session.map((ex,i)=>`${i+1}. ${gn(ex)} — ${ex.dur} min — ${ttype(ex.type)} — ${tlv(ex.lv)}\n   ${gs(ex)}\n   ${gc(ex)}\n`).join('\n');
+  const total=session.reduce((a,e)=>a+e.dur,0);
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Session Groov'O'matiK</title>
+  <style>body{font-family:Georgia,serif;padding:2.5rem;max-width:700px;margin:0 auto;color:#222;}h1{font-size:1.4rem;margin-bottom:.3rem;}pre{font-family:inherit;white-space:pre-wrap;font-size:.9rem;line-height:1.7;}footer{margin-top:2rem;font-size:.75rem;color:#888;}</style></head>
+  <body><h1>Groov'O'matiK — Session</h1><p style="font-size:.8rem;color:#666;margin-bottom:1.5rem">${new Date().toLocaleDateString('fr-FR')} · ${session.length} exercices · ${total} min</p><pre>${lines}</pre><footer>groovomatik.com</footer></body></html>`);
+  w.document.close();w.print();
+}
+function copySession(){
+  const lines=session.map((ex,i)=>`${i+1}. ${gn(ex)} (${ex.dur} min)\n   ${gs(ex)}`).join('\n\n');
+  const total=session.reduce((a,e)=>a+e.dur,0);
+  const txt=`GROOV'O'MATIK — Session\n${'─'.repeat(30)}\n\n${lines}\n\n${'─'.repeat(30)}\n${session.length} exercices · ${total} min\ngroovomatik.com`;
+  navigator.clipboard.writeText(txt).then(()=>toast(t('copy_ok'))).catch(()=>toast('Copier manuellement'));
+}
+
+// ════════════════ EXAMPLES DATA ════════════════
+const EXAMPLES = {
+  // Mot d'énergie (id:15)
+  15: {
+    lbl_fr:'Exemples de mots', lbl_en:'Example words',
+    items_fr:['Lent','Explosif','Liquide','Cassé','Électrique','Collant','Flottant','Martelé','Poreux','Cristallisé','Brûlant','Gelé','Vaporeux','Visqueux','Saccadé','Élastique','Granuleux','Aérien','Magnétique','Fondu'],
+    items_en:['Slow','Explosive','Liquid','Broken','Electric','Sticky','Floating','Hammered','Porous','Crystallized','Burning','Frozen','Vaporous','Viscous','Jerky','Elastic','Grainy','Airy','Magnetic','Melted']
+  },
+  // Concept Seeding (id:19)
+  19: {
+    lbl_fr:'Exemples de concepts', lbl_en:'Example concepts',
+    items_fr:['Glitch','Effondrement','Rebond','Fil de soie','Gravité doublée','Dissolution','Résistance','Écho','Explosion au ralenti','Aimant','Brûlure froide','Friction','Suspension','Déséquilibre','Transmission','Racines','Vol','Cassure','Onde','Émergence'],
+    items_en:['Glitch','Collapse','Rebound','Silk thread','Double gravity','Dissolution','Resistance','Echo','Slow explosion','Magnet','Cold burn','Friction','Suspension','Imbalance','Transmission','Roots','Flight','Fracture','Wave','Emergence']
+  },
+  // Cypher à mission secrète (id:41)
+  41: {
+    lbl_fr:'Exemples de missions', lbl_en:'Example missions',
+    items_fr:['Commence au sol et reste-y','Finit par un freeze de 8 temps','Rends hommage à quelqu\'un du cercle','N\'utilise que les bras','Incarne une émotion secrète','Commence et finis par le même geste','Ne touche jamais le sol','Construis vers un climax','Réponds à la personne d\'avant','Danse comme si personne ne regardait','Utilise uniquement le bas du corps','Commence en ralenti puis accélère','Reste dans un seul niveau','Raconte une histoire sans mime','Fais exactement ce que tu ne ferais jamais'],
+    items_en:['Start on the floor and stay there','End with an 8-beat freeze','Pay tribute to someone in the circle','Only use your arms','Embody a secret emotion','Start and end with the same gesture','Never touch the floor','Build toward a climax','Respond to the person before you','Dance like nobody is watching','Only use the lower body','Start in slow motion then accelerate','Stay at one level only','Tell a story without mime','Do exactly what you would never do']
+  },
+  // Traversée à mission (id:28)
+  28: {
+    lbl_fr:'Exemples de missions', lbl_en:'Example missions',
+    items_fr:['Tu transportes quelque chose de très fragile','Tu cherches quelqu\'un dans la foule','Tu fuis sans que ça se voie','Tu portes un deuil','Tu arrives quelque part pour la première fois','Tu quittes quelque chose pour toujours','Tu traverses un espace interdit','Tu portes une nouvelle qui peut tout changer','Tu es en retard pour quelque chose d\'essentiel','Tu traverses ce sol pour la dernière fois','Tu reviens d\'un long voyage','Tu te réconcilies avec quelqu\'un','Tu portes une colère secrète','Tu danses pour quelqu\'un qui n\'est plus là','Tu découvres quelque chose en marchant'],
+    items_en:['You\'re carrying something very fragile','You\'re searching for someone in the crowd','You\'re fleeing but hiding it','You\'re grieving','You\'re arriving somewhere for the first time','You\'re leaving something forever','You\'re crossing a forbidden space','You\'re carrying news that could change everything','You\'re late for something essential','You\'re crossing this floor for the last time','You\'re returning from a long journey','You\'re reconciling with someone','You\'re carrying a secret anger','You\'re dancing for someone no longer there','You\'re discovering something as you walk']
+  }
+};
+
+// ════════════════ DRAW STATE ════════════════
+const drawState = {}; // exId -> last drawn index
+
+// ════════════════ ADD FORM ════════════════
+function switchLFTab(field,l,btn){
+  btn.closest('.lang-field-tab').querySelectorAll('.lang-field-tab-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  const wrap=btn.closest('.lang-field-group');
+  wrap.querySelectorAll('.lang-field-pane').forEach(p=>p.classList.remove('on'));
+  wrap.querySelector('#lfp-'+field+'-'+l).classList.add('on');
+}
+function renderTagSel(){
+  const sel=document.getElementById('tag-sel');
+  sel.innerHTML=ALL_TAGS.map(tg=>`<input type="checkbox" class="tc" id="tg-${tg}" value="${tg}"><label class="tl" for="tg-${tg}">${tg}</label>`).join('');
+}
+function submitEx(){
+  const nameFr=document.getElementById('fn-fr').value.trim();
+  const nameEn=document.getElementById('fn-en').value.trim()||nameFr;
+  const scoreFr=document.getElementById('fs-fr').value.trim();
+  const scoreEn=document.getElementById('fs-en').value.trim()||scoreFr;
+  if(!nameFr||!scoreFr)return;
+  const tags=[...document.querySelectorAll('.tc:checked')].map(c=>c.value);
+  const id=Math.max(...DB.map(e=>e.id))+1;
+  DB.push({id,table:document.getElementById('ftbl').value,type:document.getElementById('ft').value,
+    nf:nameFr,ne:nameEn,int:document.getElementById('fi').value,
+    sf:scoreFr,se:scoreEn,lv:document.getElementById('flv').value,
+    dur:parseInt(document.getElementById('fdur').value)||10,
+    ppl:document.getElementById('fppl').value,
+    cf:document.getElementById('fctr').value,ce:document.getElementById('fctr').value,
+    tags,custom:true});
+  document.getElementById('cnt').textContent=DB.length;
+  document.getElementById('fn-fr').value='';document.getElementById('fn-en').value='';
+  document.getElementById('fs-fr').value='';document.getElementById('fs-en').value='';
+  document.getElementById('fctr').value='';
+  document.querySelectorAll('.tc:checked').forEach(c=>c.checked=false);
+  const ok=document.getElementById('f-ok');ok.style.display='block';setTimeout(()=>ok.style.display='none',2500);
+}
+
+// ════════════════ EXPORT MODAL ════════════════
+function openExport(){document.getElementById('export-modal').classList.add('show');}
+function closeExport(){document.getElementById('export-modal').classList.remove('show');}
+function doPrint(){closeExport();printSession();}
+function doCopy(){closeExport();copySession();}
+
+// ════════════════ TIMER ════════════════
+function openTimer(exId){
+  const ex=DB.find(e=>e.id===exId)||{};
+  timer.exId=exId;
+  timer.total=(ex.dur||10)*60;
+  timer.remaining=timer.total;
+  timer.active=false;timer.paused=false;
+  if(timer.interval){clearInterval(timer.interval);timer.interval=null;}
+  document.getElementById('tmr-exname').textContent=gn(ex)||'';
+  document.getElementById('tmr-score').textContent=gs(ex)||'';
+  document.getElementById('tmr-display').textContent=fmtTime(timer.remaining);
+  document.getElementById('tmr-display').style.color='var(--amber)';
+  document.getElementById('tmr-bar').style.width='100%';
+  document.getElementById('tmr-bar').style.background='var(--amber)';
+  document.getElementById('tmr-pp').textContent=t('tmr_start');
+  // duration picker
+  const durOptions=[5,8,10,12,15,20,30];
+  const def=ex.dur||10;
+  document.getElementById('tmr-picker').innerHTML=durOptions.map(d=>`<button class="dur-btn${d===def?' on':''}" onclick="setTmrDur(${d},this)">${d} min</button>`).join('');
+  document.getElementById('tmr-overlay').classList.add('show');
+}
+function setTmrDur(min,btn){
+  if(timer.active){clearInterval(timer.interval);timer.interval=null;timer.active=false;timer.paused=false;}
+  timer.total=min*60;timer.remaining=min*60;
+  document.querySelectorAll('.dur-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('tmr-display').textContent=fmtTime(timer.remaining);
+  document.getElementById('tmr-bar').style.width='100%';
+  document.getElementById('tmr-bar').style.background='var(--amber)';
+  document.getElementById('tmr-display').style.color='var(--amber)';
+  document.getElementById('tmr-pp').textContent=t('tmr_start');
+}
+function timerToggle(){
+  if(!timer.active&&!timer.paused){
+    timer.active=true;
+    document.getElementById('tmr-pp').textContent=t('tmr_pause');
+    timer.interval=setInterval(timerTick,1000);
+  } else if(timer.active&&!timer.paused){
+    timer.paused=true;timer.active=false;
+    clearInterval(timer.interval);timer.interval=null;
+    document.getElementById('tmr-pp').textContent=t('tmr_resume');
+  } else {
+    timer.paused=false;timer.active=true;
+    document.getElementById('tmr-pp').textContent=t('tmr_pause');
+    timer.interval=setInterval(timerTick,1000);
+  }
+}
+function timerTick(){
+  timer.remaining--;
+  const pct=timer.remaining/timer.total*100;
+  const disp=document.getElementById('tmr-display');
+  const bar=document.getElementById('tmr-bar');
+  disp.textContent=fmtTime(timer.remaining);
+  bar.style.width=pct+'%';
+  if(pct<=25&&pct>10){disp.style.color='#e8a030';bar.style.background='#e8a030';}
+  else if(pct<=10){disp.style.color='#c45c38';bar.style.background='#c45c38';}
+  if(timer.remaining<=0){
+    clearInterval(timer.interval);timer.interval=null;timer.active=false;
+    disp.textContent=t('tmr_end');
+    document.getElementById('tmr-pp').textContent=t('tmr_start');
+    try{const ctx=new AudioContext();const osc=ctx.createOscillator();const g=ctx.createGain();osc.connect(g);g.connect(ctx.destination);osc.frequency.value=880;g.gain.setValueAtTime(.3,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+1);osc.start();osc.stop(ctx.currentTime+1);}catch(e){}
+  }
+}
+function timerClose(){
+  if(timer.interval){clearInterval(timer.interval);timer.interval=null;}
+  timer.active=false;timer.paused=false;
+  document.getElementById('tmr-overlay').classList.remove('show');
+}
+function fmtTime(s){const m=Math.floor(s/60);const sec=s%60;return`${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;}
+
+// ════════════════ TOAST ════════════════
+let toastTimer=null;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  if(toastTimer)clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),2000);
+}
+
+// ════════════════ INIT ════════════════
+document.getElementById('cnt').textContent=DB.length;
+initRandom();
+</script>
+</body>
+</html>
