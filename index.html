@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Groov'O'matiK — Outil Pédagogique</title>
+<title>Groov'O'laB — by Groov'O'matiK</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -36,6 +36,7 @@ body{background:var(--ink);color:var(--cream);font-family:var(--font);min-height
 .hdr{background:var(--ink2);border-bottom:1px solid var(--border2);padding:0 1rem;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:200;}
 .logo{font-family:var(--mono);font-size:1rem;font-weight:700;letter-spacing:-.01em;line-height:1;}
 .logo em{font-style:normal;color:var(--amber);}
+.logo-sub{font-size:8px;font-weight:400;color:var(--cream3);letter-spacing:.04em;display:block;margin-top:1px;}
 .hdr-r{display:flex;align-items:center;gap:10px;}
 .lang-wrap{display:flex;border:1px solid var(--border2);border-radius:30px;overflow:hidden;}
 .lang-btn{font-size:10px;font-weight:700;font-family:var(--mono);padding:4px 10px;background:transparent;color:var(--cream3);border:none;cursor:pointer;}
@@ -249,7 +250,65 @@ body{background:var(--ink);color:var(--cream);font-family:var(--font);min-height
 .export-close{width:100%;padding:11px;font-family:var(--mono);font-size:11px;font-weight:700;background:transparent;border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--cream3);cursor:pointer;}
 .export-close:hover{color:var(--cream);}
 
+/* ── LIVE VIEW ── */
+.live-wrap{display:flex;flex-direction:column;gap:.8rem;}
+.live-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.2rem;}
+.live-prog-label{font-family:var(--mono);font-size:10px;color:var(--cream3);letter-spacing:.06em;}
+.live-prog-bar-wrap{height:4px;background:var(--ink4);border-radius:2px;flex:1;margin:0 10px;overflow:hidden;}
+.live-prog-bar{height:100%;background:var(--amber);border-radius:2px;transition:width .4s ease;}
+.live-card{background:var(--ink2);border:1px solid rgba(232,160,48,.3);border-radius:var(--r);padding:1.25rem;position:relative;}
+.live-type{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:.4rem;display:flex;align-items:center;gap:6px;}
+.live-dot{width:7px;height:7px;border-radius:50%;}
+.live-name{font-size:1.5rem;font-weight:700;line-height:1.2;margin-bottom:.7rem;}
+.live-score{font-size:1rem;color:var(--cream2);line-height:1.7;margin-bottom:.9rem;}
+.live-score.large{font-size:1.25rem;line-height:1.8;}
+.live-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem;}
+.live-timer-wrap{background:var(--ink3);border-radius:var(--r-sm);padding:1rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;}
+.live-timer-row{display:flex;align-items:center;gap:.75rem;width:100%;}
+.live-timer-display{font-family:var(--mono);font-size:2.5rem;font-weight:700;letter-spacing:-.02em;transition:color .3s;min-width:90px;text-align:center;}
+.live-timer-prog{flex:1;height:5px;background:var(--ink4);border-radius:3px;overflow:hidden;}
+.live-timer-fill{height:100%;background:var(--amber);border-radius:3px;transition:width .5s linear,background .3s;}
+.live-timer-btns{display:flex;gap:7px;width:100%;}
+.btn-live-pp{flex:1;padding:10px;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.04em;border:none;border-radius:var(--r-sm);background:var(--amber);color:var(--ink);cursor:pointer;}
+.btn-live-pp:hover{background:#f0ac3a;}
+.btn-live-reset{padding:10px 14px;font-family:var(--mono);font-size:12px;font-weight:700;border:1px solid var(--border2);border-radius:var(--r-sm);background:transparent;color:var(--cream3);cursor:pointer;}
+.live-nav-row{display:flex;gap:8px;}
+.btn-live-nav{flex:1;padding:12px;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.04em;border:1px solid var(--border2);border-radius:var(--r-sm);background:var(--ink3);color:var(--cream2);cursor:pointer;transition:background .15s;}
+.btn-live-nav:hover{background:var(--ink4);color:var(--cream);}
+.btn-live-nav:disabled{opacity:.3;cursor:default;}
+.btn-live-next{border-color:rgba(232,160,48,.35);color:var(--amber);}
+.btn-live-next:hover{background:rgba(232,160,48,.08);}
+.live-note-wrap{background:var(--ink2);border:1px solid var(--border);border-radius:var(--r);padding:.9rem;}
+.live-note-label{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cream3);margin-bottom:.5rem;}
+.live-note-input{width:100%;background:var(--ink3);border:1px solid var(--border2);border-radius:var(--r-sm);padding:8px 10px;font-size:13px;font-family:var(--font);color:var(--cream);outline:none;resize:none;min-height:64px;line-height:1.5;}
+.live-note-input:focus{border-color:rgba(232,160,48,.3);}
+.live-empty{text-align:center;padding:3rem 1rem;color:var(--cream3);background:var(--ink2);border:1px dashed var(--border2);border-radius:var(--r);}
+.live-large-toggle{position:absolute;top:12px;right:12px;background:transparent;border:1px solid var(--border2);border-radius:6px;color:var(--cream3);cursor:pointer;font-size:13px;padding:4px 8px;font-family:var(--mono);}
+.live-large-toggle:hover{color:var(--amber);border-color:rgba(232,160,48,.4);}
+.live-dur-row{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:.5rem;}
+.live-dur-btn{font-family:var(--mono);font-size:10px;padding:4px 10px;border:1px solid var(--border2);border-radius:20px;background:transparent;color:var(--cream3);cursor:pointer;}
+.live-dur-btn.on{background:var(--ink4);color:var(--amber);border-color:rgba(232,160,48,.4);}
+
+/* ── SESSION ACTIVE SLOT ── */
+.sess-slot.active{border-color:rgba(232,160,48,.5);background:rgba(232,160,48,.05);}
+.sess-slot.active .slot-n{background:var(--amber);color:var(--ink);}
+.sess-slot.done{opacity:.5;}
+.sess-slot.done .slot-name{text-decoration:line-through;}
+.slot-launch{font-family:var(--mono);font-size:10px;font-weight:700;padding:5px 10px;border:1px solid rgba(232,160,48,.4);border-radius:var(--r-sm);background:transparent;color:var(--amber);cursor:pointer;white-space:nowrap;}
+.slot-launch:hover{background:rgba(232,160,48,.1);}
+.sess-launch-all{width:100%;padding:11px;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.05em;border:none;border-radius:var(--r-sm);background:var(--amber);color:var(--ink);cursor:pointer;margin-top:.9rem;}
+.sess-launch-all:hover{background:#f0ac3a;}
+
+/* ── RANDOM FILTERS ADVANCED ── */
+.rf-section{margin-bottom:.6rem;}
+.rf-section-lbl{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cream3);margin-bottom:.35rem;}
+
 @media(max-width:540px){
+  .live-name{font-size:1.25rem;}
+  .live-score{font-size:.9rem;}
+  .live-score.large{font-size:1.1rem;}
+  .live-timer-display{font-size:2rem;}
+}
   .frow3{grid-template-columns:1fr 1fr;}
   .tmr-display{font-size:3.5rem;}
   .rh-name{font-size:1.15rem;}
@@ -283,7 +342,7 @@ body{background:var(--ink);color:var(--cream);font-family:var(--font);min-height
 <body>
 
 <header class="hdr">
-  <div class="logo">Groov'<em>O'</em>matiK</div>
+  <div class="logo">Groov'<em>O'</em>laB <span class="logo-sub">by Groov'O'matiK</span></div>
   <div class="hdr-r">
     <div class="hdr-count"><b id="cnt">0</b> exercices</div>
     <div class="lang-wrap">
@@ -295,6 +354,7 @@ body{background:var(--ink);color:var(--cream);font-family:var(--font);min-height
 
 <nav class="nav" id="main-nav">
   <button class="nb on" onclick="goTab('random')" id="nb-random">⚡ RANDOM</button>
+  <button class="nb" onclick="goTab('live')" id="nb-live" style="color:var(--terra);border-bottom-color:transparent;">▶ LIVE</button>
   <button class="nb" onclick="goTab('t1')" id="nb-t1">01 ÉTAT</button>
   <button class="nb" onclick="goTab('t2')" id="nb-t2">02 CONTRAINTES</button>
   <button class="nb" onclick="goTab('t3')" id="nb-t3">03 ESPACE</button>
@@ -327,6 +387,11 @@ body{background:var(--ink);color:var(--cream);font-family:var(--font);min-height
     <button class="btn-tmr-rand" onclick="openTimerFromRandom()">⏱</button>
     <button class="btn-add-rand" onclick="addFromRandom()">＋</button>
   </div>
+</div>
+
+<!-- LIVE -->
+<div id="v-live" style="display:none">
+  <div class="live-wrap" id="live-wrap"></div>
 </div>
 
 <!-- TABLES t1–t6 -->
@@ -367,7 +432,8 @@ body{background:var(--ink);color:var(--cream);font-family:var(--font);min-height
   <div class="sess-hdr">
     <div class="sess-lbl" id="lbl-sess">SESSION EN COURS</div>
     <div class="sess-hdr-btns">
-      <button class="btn-exp" onclick="openExport()" id="btn-export">↑ EXPORTER</button>
+      <button class="btn-print" onclick="launchLive()" id="btn-live-launch" style="border-color:rgba(196,92,56,.4);color:var(--terra);">▶ LIVE</button>
+      <button class="btn-exp" onclick="openExport()" id="btn-export">↑ EXPORT</button>
       <button class="btn-exp" onclick="copySession()" id="btn-copy">COPIER</button>
       <button class="btn-print" onclick="printSession()" id="btn-print">IMPRIMER</button>
     </div>
@@ -631,9 +697,13 @@ let lang = 'fr';
 let tab = 'random';
 let session = [];
 let randId = null;
-let rfFilter = '';
+let rfFilter = {type:'', dur:'', lv:'', ppl:''};
 let cfFilter = {type:'', table:''};
 let timer = {active:false, paused:false, total:0, remaining:0, exId:null, interval:null};
+let liveIdx = 0;
+let liveTimer = {active:false, paused:false, total:0, remaining:0, interval:null};
+let liveNote = '';
+let liveScoreLarge = false;
 
 // ════════════════ LANG ════════════════
 function setLang(l){
@@ -666,30 +736,84 @@ function gc(ex){return lang==='fr'?ex.cf:ex.ce;}
 function goTab(id){
   tab=id;
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
-  document.getElementById('nb-'+id).classList.add('on');
-  const views=['random','t1','t2','t3','t4','t5','t6','catalog','session','add'];
+  const nbEl=document.getElementById('nb-'+id);
+  if(nbEl){nbEl.classList.add('on');if(id==='live')nbEl.style.color='var(--terra)';}
+  // reset live btn color when leaving
+  if(id!=='live'){const lb=document.getElementById('nb-live');if(lb)lb.style.color='var(--terra)';}
+  const views=['random','live','t1','t2','t3','t4','t5','t6','catalog','session','add'];
   views.forEach(v=>{const el=document.getElementById('v-'+v);if(el)el.style.display=v===id?'block':'none';});
   if(id.startsWith('t')) renderTable(id);
   else if(id==='catalog') renderCatalog();
   else if(id==='session') renderSession();
   else if(id==='random') initRandom();
+  else if(id==='live') renderLive();
   else if(id==='add') renderTagSel();
+  saveState();
 }
 
 // ════════════════ RANDOM ════════════════
-function initRandom(){
-  renderRFilters();
-  doRoll();
-}
+function initRandom(){renderRFilters();doRoll();}
+
 function renderRFilters(){
   const bar=document.getElementById('rf-bar');
   const types=[...new Set(DB.map(e=>e.type))];
-  bar.innerHTML=`<button class="fchip${rfFilter===''?' on':''}" onclick="setRF('')">TOUS</button>`
-    +types.map(tp=>`<button class="fchip${rfFilter===tp?' on':''}" onclick="setRF('${tp}')" style="border-color:${tc(tp)}44">${ttype(tp).toUpperCase()}</button>`).join('');
+  const durOpts=[{k:'',l:'Toute durée'},{k:'short',l:'≤8 min'},{k:'medium',l:'9–15 min'},{k:'long',l:'>15 min'}];
+  const lvOpts=[{k:'',l:'Tous niveaux'},{k:'beginner',l:lang==='fr'?'Débutant':'Beginner'},{k:'intermediate',l:lang==='fr'?'Intermédiaire':'Intermediate'},{k:'advanced',l:lang==='fr'?'Avancé':'Advanced'}];
+  const pplOpts=[{k:'',l:'Tous'},{k:'solo',l:'Solo'},{k:'duo',l:'Duo'},{k:'groupe',l:lang==='fr'?'Groupe':'Group'}];
+  bar.innerHTML=`
+    <div class="rf-section">
+      <div class="rf-section-lbl">${lang==='fr'?'TYPE':'TYPE'}</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+        <button class="fchip${rfFilter.type===''?' on':''}" onclick="setRF('type','')">TOUS</button>
+        ${types.map(tp=>`<button class="fchip${rfFilter.type===tp?' on':''}" onclick="setRF('type','${tp}')" style="border-color:${tc(tp)}44">${ttype(tp).toUpperCase()}</button>`).join('')}
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <div class="rf-section">
+        <div class="rf-section-lbl">${lang==='fr'?'DURÉE':'DURATION'}</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;">
+          ${durOpts.map(o=>`<button class="fchip${rfFilter.dur===o.k?' on':''}" onclick="setRF('dur','${o.k}')">${o.l}</button>`).join('')}
+        </div>
+      </div>
+      <div class="rf-section">
+        <div class="rf-section-lbl">${lang==='fr'?'NIVEAU':'LEVEL'}</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;">
+          ${lvOpts.map(o=>`<button class="fchip${rfFilter.lv===o.k?' on':''}" onclick="setRF('lv','${o.k}')">${o.l}</button>`).join('')}
+        </div>
+      </div>
+      <div class="rf-section">
+        <div class="rf-section-lbl">${lang==='fr'?'FORMAT':'FORMAT'}</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;">
+          ${pplOpts.map(o=>`<button class="fchip${rfFilter.ppl===o.k?' on':''}" onclick="setRF('ppl','${o.k}')">${o.l}</button>`).join('')}
+        </div>
+      </div>
+    </div>`;
 }
-function setRF(v){rfFilter=v;renderRFilters();doRoll();}
+
+function getFilteredPool(){
+  return DB.filter(e=>{
+    if(rfFilter.type&&e.type!==rfFilter.type)return false;
+    if(rfFilter.lv&&e.lv!==rfFilter.lv)return false;
+    if(rfFilter.ppl&&e.ppl!==rfFilter.ppl&&e.ppl!=='tous')return false;
+    if(rfFilter.dur){
+      if(rfFilter.dur==='short'&&e.dur>8)return false;
+      if(rfFilter.dur==='medium'&&(e.dur<9||e.dur>15))return false;
+      if(rfFilter.dur==='long'&&e.dur<=15)return false;
+    }
+    return true;
+  });
+}
+
+function setRF(k,v){
+  rfFilter[k]=v;
+  renderRFilters();
+  const pool=getFilteredPool();
+  if(pool.length) doRoll();
+}
+
 function doRoll(){
-  const pool=rfFilter?DB.filter(e=>e.type===rfFilter):DB;
+  const pool=getFilteredPool();
+  if(!pool.length){renderRFilters();return;}
   const ex=pool[Math.floor(Math.random()*pool.length)];
   randId=ex.id;
   renderRandom(ex.id);
@@ -704,7 +828,7 @@ function renderRandom(id){
   document.getElementById('rh-score').textContent=gs(ex);
   document.getElementById('rh-pills').innerHTML=lvPill(ex.lv)+`<span class="pill">${ex.dur} min</span><span class="pill">${tppl(ex.ppl)}</span><span class="pill pill-amber">${tint(ex.int)}</span>`+(ex.tags||[]).slice(0,3).map(tg=>`<span class="pill" style="border-color:${tc(ex.type)}44">${tg}</span>`).join('');
 }
-function addFromRandom(){if(!randId)return;session.push({...DB.find(e=>e.id===randId)});toast(t('add_ok'));}
+function addFromRandom(){if(!randId)return;session.push({...DB.find(e=>e.id===randId)});saveState();toast(t('add_ok'));}
 function openTimerFromRandom(){if(!randId)return;openTimer(randId);}
 
 // ════════════════ TABLES ════════════════
@@ -802,10 +926,131 @@ function toggleCard(ctx,id){
   if(el)el.classList.toggle('open');
 }
 
-// ════════════════ SESSION ════════════════
+// ════════════════ LIVE ENGINE ════════════════
+function launchLive(){
+  if(!session.length){toast(lang==='fr'?'Session vide — ajoute des exercices':'Empty session — add exercises first');return;}
+  liveIdx=0;stopLiveTimer();goTab('live');
+}
+function renderLive(){
+  const wrap=document.getElementById('live-wrap');
+  if(!session.length){
+    wrap.innerHTML=`<div class="live-empty"><div style="font-size:2rem;margin-bottom:.5rem">▶</div>${lang==='fr'?'Construis une session, puis lance le mode Live depuis l\'onglet SESSION.':'Build a session, then launch Live mode from the SESSION tab.'}</div>`;
+    return;
+  }
+  const ex=session[liveIdx];
+  const total=session.reduce((a,e)=>a+e.dur,0);
+  const done=session.slice(0,liveIdx).reduce((a,e)=>a+e.dur,0);
+  const pct=Math.round(done/total*100);
+  const color=tc(ex.type);
+  const isRunning=liveTimer.active;
+  const isPaused=liveTimer.paused;
+  const ppLabel=isRunning?(lang==='fr'?'⏸ PAUSE':'⏸ PAUSE'):isPaused?(lang==='fr'?'▶ REPRENDRE':'▶ RESUME'):(lang==='fr'?'▶ DÉMARRER':'▶ START');
+  const remStr=liveTimer.total>0?fmtTime(liveTimer.remaining):fmtTime(ex.dur*60);
+  const barPct=liveTimer.total>0?Math.round(liveTimer.remaining/liveTimer.total*100):100;
+  const timerColor=barPct<=10?'var(--terra)':barPct<=25?'var(--amber)':'var(--amber)';
+  const scoreClass=liveScoreLarge?'live-score large':'live-score';
+  const durOpts=[5,8,10,12,15,20,30];
+  wrap.innerHTML=`
+    <div class="live-top">
+      <span class="live-prog-label">${liveIdx+1} / ${session.length}</span>
+      <div class="live-prog-bar-wrap"><div class="live-prog-bar" style="width:${pct}%"></div></div>
+      <span class="live-prog-label">${done}/${total} min</span>
+    </div>
+    <div class="live-card">
+      <button class="live-large-toggle" onclick="toggleLiveScoreLarge()" title="${lang==='fr'?'Agrandir/réduire':'Toggle large text'}">🔠</button>
+      <div class="live-type"><div class="live-dot" style="background:${color}"></div>${ttype(ex.type).toUpperCase()}</div>
+      <div class="live-name">${gn(ex)}</div>
+      <div class="${scoreClass}">${gs(ex)}</div>
+      <div class="live-meta">${lvPill(ex.lv)}<span class="pill">${ex.dur} min</span><span class="pill">${tppl(ex.ppl)}</span><span class="pill pill-amber">${tint(ex.int)}</span></div>
+      <div class="live-timer-wrap">
+        <div class="live-timer-row">
+          <div class="live-timer-display" style="color:${timerColor}">${remStr}</div>
+          <div class="live-timer-prog"><div class="live-timer-fill" style="width:${barPct}%;background:${timerColor}"></div></div>
+        </div>
+        <div class="live-dur-row">${durOpts.map(d=>`<button class="live-dur-btn${d===ex.dur?' on':''}" onclick="setLiveDur(${d},this)">${d}m</button>`).join('')}</div>
+        <div class="live-timer-btns">
+          <button class="btn-live-pp" onclick="toggleLiveTimer()">${ppLabel}</button>
+          <button class="btn-live-reset" onclick="resetLiveTimer()">↺</button>
+        </div>
+      </div>
+      ${EXAMPLES[ex.id]?`<div style="margin-top:.8rem">${examplesDrawer(ex)}</div>`:''}
+    </div>
+    <div class="live-note-wrap">
+      <div class="live-note-label">${lang==='fr'?'NOTE SUR CET EXERCICE':'NOTE ON THIS EXERCISE'}</div>
+      <textarea class="live-note-input" id="live-note-field" placeholder="${lang==='fr'?'Ce qui s\'est passé, réactions, adaptations…':'What happened, reactions, adaptations…'}" oninput="saveLiveNote()">${liveNote}</textarea>
+    </div>
+    <div class="live-nav-row">
+      <button class="btn-live-nav" onclick="liveStep(-1)" ${liveIdx===0?'disabled':''}>← ${lang==='fr'?'PRÉCÉDENT':'PREV'}</button>
+      <button class="btn-live-nav btn-live-next" onclick="liveStep(1)" ${liveIdx===session.length-1?'disabled':''}>→ ${lang==='fr'?'SUIVANT':'NEXT'}</button>
+    </div>`;
+}
+
+function toggleLiveScoreLarge(){liveScoreLarge=!liveScoreLarge;renderLive();}
+
+function setLiveDur(min,btn){
+  stopLiveTimer();
+  liveTimer.total=min*60;liveTimer.remaining=min*60;
+  document.querySelectorAll('.live-dur-btn').forEach(b=>b.classList.remove('on'));
+  if(btn)btn.classList.add('on');
+  renderLive();
+}
+
+function toggleLiveTimer(){
+  if(!liveTimer.active&&!liveTimer.paused){
+    if(liveTimer.total===0){const ex=session[liveIdx];liveTimer.total=ex.dur*60;liveTimer.remaining=ex.dur*60;}
+    liveTimer.active=true;
+    liveTimer.interval=setInterval(liveTimerTick,1000);
+  } else if(liveTimer.active){
+    liveTimer.paused=true;liveTimer.active=false;
+    clearInterval(liveTimer.interval);liveTimer.interval=null;
+  } else {
+    liveTimer.paused=false;liveTimer.active=true;
+    liveTimer.interval=setInterval(liveTimerTick,1000);
+  }
+  renderLive();
+}
+
+function liveTimerTick(){
+  liveTimer.remaining--;
+  if(liveTimer.remaining<=0){
+    stopLiveTimer();
+    try{const ctx=new AudioContext();const osc=ctx.createOscillator();const g=ctx.createGain();osc.connect(g);g.connect(ctx.destination);osc.frequency.value=660;g.gain.setValueAtTime(.4,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+1.2);osc.start();osc.stop(ctx.currentTime+1.2);}catch(e){}
+  }
+  renderLive();
+}
+
+function stopLiveTimer(){
+  if(liveTimer.interval){clearInterval(liveTimer.interval);liveTimer.interval=null;}
+  liveTimer.active=false;liveTimer.paused=false;
+}
+
+function resetLiveTimer(){
+  stopLiveTimer();
+  const ex=session[liveIdx];
+  liveTimer.total=ex.dur*60;liveTimer.remaining=ex.dur*60;
+  renderLive();
+}
+
+function liveStep(dir){
+  // save note
+  const nf=document.getElementById('live-note-field');
+  if(nf)liveNote=nf.value;
+  stopLiveTimer();
+  liveTimer.total=0;liveTimer.remaining=0;
+  liveNote='';
+  liveIdx=Math.max(0,Math.min(session.length-1,liveIdx+dir));
+  renderLive();
+}
+
+function saveLiveNote(){
+  const nf=document.getElementById('live-note-field');
+  if(nf)liveNote=nf.value;
+}
+
+// ════════════════ SESSION (enhanced) ════════════════
 function addToSess(id){
   const ex=DB.find(e=>e.id===id);
-  if(ex){session.push({...ex});toast(t('add_ok'));}
+  if(ex){session.push({...ex});toast(t('add_ok'));saveState();}
 }
 function renderSession(){
   const body=document.getElementById('sess-body');
@@ -814,14 +1059,16 @@ function renderSession(){
     return;
   }
   const total=session.reduce((a,e)=>a+e.dur,0);
+  const activeClass=(i)=>i===liveIdx&&tab==='live'?'active':'';
   body.innerHTML=`<div class="sess-list">${session.map((ex,i)=>`
-    <div class="sess-slot">
+    <div class="sess-slot ${activeClass(i)}" id="ss-${i}">
       <div class="slot-n">${i+1}</div>
       <div class="slot-info">
         <div class="slot-name">${gn(ex)}</div>
         <div class="slot-meta">${ttype(ex.type)} · ${tlv(ex.lv)} · ${ex.dur} min · ${tppl(ex.ppl)}</div>
       </div>
       <div class="slot-btns">
+        <button class="slot-launch" onclick="launchLiveAt(${i})">▶</button>
         <button class="slot-tmr" onclick="openTimer(${ex.id})" title="Timer">⏱</button>
         <button class="slot-rm" onclick="rmFromSess(${i})">✕</button>
       </div>
@@ -830,23 +1077,67 @@ function renderSession(){
   <div class="sess-stats">
     <div class="stat-item"><div class="stat-n">${session.length}</div><div class="stat-l">${t('totex')}</div></div>
     <div class="stat-item"><div class="stat-n">${total}</div><div class="stat-l">${t('totmin')}</div></div>
-  </div>`;
+  </div>
+  <button class="sess-launch-all" onclick="launchLive()">▶ ${lang==='fr'?'LANCER EN MODE LIVE':'LAUNCH LIVE MODE'}</button>`;
 }
-function rmFromSess(i){session.splice(i,1);renderSession();}
+
+function launchLiveAt(i){
+  liveIdx=i;stopLiveTimer();
+  liveTimer.total=0;liveTimer.remaining=0;liveNote='';
+  goTab('live');
+}
+
+function rmFromSess(i){session.splice(i,1);saveState();renderSession();}
+
 function printSession(){
   const lines=session.map((ex,i)=>`${i+1}. ${gn(ex)} — ${ex.dur} min — ${ttype(ex.type)} — ${tlv(ex.lv)}\n   ${gs(ex)}\n   ${gc(ex)}\n`).join('\n');
   const total=session.reduce((a,e)=>a+e.dur,0);
   const w=window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Session Groov'O'matiK</title>
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Session Groov'O'laB</title>
   <style>body{font-family:Georgia,serif;padding:2.5rem;max-width:700px;margin:0 auto;color:#222;}h1{font-size:1.4rem;margin-bottom:.3rem;}pre{font-family:inherit;white-space:pre-wrap;font-size:.9rem;line-height:1.7;}footer{margin-top:2rem;font-size:.75rem;color:#888;}</style></head>
-  <body><h1>Groov'O'matiK — Session</h1><p style="font-size:.8rem;color:#666;margin-bottom:1.5rem">${new Date().toLocaleDateString('fr-FR')} · ${session.length} exercices · ${total} min</p><pre>${lines}</pre><footer>groovomatik.com</footer></body></html>`);
+  <body><h1>Groov'O'laB — Session</h1><p style="font-size:.8rem;color:#666;margin-bottom:1.5rem">${new Date().toLocaleDateString('fr-FR')} · ${session.length} exercices · ${total} min</p><pre>${lines}</pre><footer>groovomatik.com</footer></body></html>`);
   w.document.close();w.print();
 }
+
 function copySession(){
   const lines=session.map((ex,i)=>`${i+1}. ${gn(ex)} (${ex.dur} min)\n   ${gs(ex)}`).join('\n\n');
   const total=session.reduce((a,e)=>a+e.dur,0);
-  const txt=`GROOV'O'MATIK — Session\n${'─'.repeat(30)}\n\n${lines}\n\n${'─'.repeat(30)}\n${session.length} exercices · ${total} min\ngroovomatik.com`;
+  const txt=`GROOV'O'LAB — Session\n${'─'.repeat(30)}\n\n${lines}\n\n${'─'.repeat(30)}\n${session.length} exercices · ${total} min\ngroovomatik.com`;
   navigator.clipboard.writeText(txt).then(()=>toast(t('copy_ok'))).catch(()=>toast('Copier manuellement'));
+}
+
+// ════════════════ LOCALSTORAGE ════════════════
+const LS_SESSION='gol_session';
+const LS_CUSTOM='gol_custom';
+
+function saveState(){
+  try{
+    const customs=DB.filter(e=>e.custom);
+    localStorage.setItem(LS_SESSION,JSON.stringify(session));
+    localStorage.setItem(LS_CUSTOM,JSON.stringify(customs));
+  }catch(e){}
+}
+
+function loadState(){
+  try{
+    const savedSession=localStorage.getItem(LS_SESSION);
+    const savedCustom=localStorage.getItem(LS_CUSTOM);
+    if(savedCustom){
+      const customs=JSON.parse(savedCustom);
+      customs.forEach(ex=>{if(!DB.find(e=>e.id===ex.id))DB.push(ex);});
+    }
+    if(savedSession){
+      const s=JSON.parse(savedSession);
+      // remap to current DB entries to get fresh data
+      session=s.map(e=>DB.find(d=>d.id===e.id)||e).filter(Boolean);
+    }
+    document.getElementById('cnt').textContent=DB.length;
+  }catch(e){session=[];}
+  if(session.length){
+    // show subtle indicator
+    const nb=document.getElementById('nb-session');
+    if(nb)nb.textContent=`SESSION (${session.length})`;
+  }
 }
 
 // ════════════════ EXAMPLES DATA ════════════════
@@ -912,6 +1203,7 @@ function submitEx(){
   document.getElementById('fs-fr').value='';document.getElementById('fs-en').value='';
   document.getElementById('fctr').value='';
   document.querySelectorAll('.tc:checked').forEach(c=>c.checked=false);
+  saveState();
   const ok=document.getElementById('f-ok');ok.style.display='block';setTimeout(()=>ok.style.display='none',2500);
 }
 
@@ -1001,6 +1293,7 @@ function toast(msg){
 }
 
 // ════════════════ INIT ════════════════
+loadState();
 document.getElementById('cnt').textContent=DB.length;
 initRandom();
 </script>
