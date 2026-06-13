@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
   --ink:     #0d0c0a;
@@ -303,7 +304,17 @@ body{background:var(--ink);color:var(--cream);font-family:var(--font);min-height
 .rf-section{margin-bottom:.6rem;}
 .rf-section-lbl{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cream3);margin-bottom:.35rem;}
 
-/* ── SUBNAV (Bibliothèque) ── */
+/* ── GROUP BAR ── */
+.group-bar{background:var(--ink2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;padding:8px 12px;}
+.group-sync{font-size:10px;color:var(--cream3);transition:color .3s;flex-shrink:0;}
+.group-sync.synced{color:var(--sage);}
+.group-sync.syncing{color:var(--amber);animation:pulse 1s infinite;}
+.group-sync.offline{color:var(--terra);}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.group-select{flex:1;background:var(--ink3);border:1px solid var(--border2);border-radius:var(--r-sm);color:var(--cream);font-family:var(--mono);font-size:11px;font-weight:700;padding:7px 10px;outline:none;letter-spacing:.03em;}
+.group-select:focus{border-color:rgba(232,160,48,.35);}
+.group-add{width:32px;height:32px;border-radius:var(--r-sm);background:transparent;border:1px solid var(--border2);color:var(--amber);font-size:16px;font-weight:700;cursor:pointer;flex-shrink:0;}
+.group-add:hover{background:var(--ink3);}
 .subnav{background:var(--ink2);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;padding:0 6px;scrollbar-width:none;}
 .subnav::-webkit-scrollbar{display:none;}
 .sb{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;padding:0 11px;height:36px;background:transparent;color:var(--cream3);border:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s;}
@@ -388,6 +399,29 @@ body{background:var(--ink);color:var(--cream);font-family:var(--font);min-height
   <button class="nb" onclick="goTab('session')" id="nb-session">📋 SESSION</button>
   <button class="nb" onclick="goTab('journal')" id="nb-journal">📓 JOURNAL</button>
 </nav>
+
+<!-- GROUP BAR -->
+<div class="group-bar" id="group-bar">
+  <div class="group-sync" id="group-sync" title="Statut de synchronisation">●</div>
+  <select class="group-select" id="group-select" onchange="onGroupChange()"></select>
+  <button class="group-add" onclick="openGroupModal()">+</button>
+</div>
+
+<!-- GROUP MODAL -->
+<div class="capture-modal" id="group-modal">
+  <div class="capture-sheet">
+    <div class="capture-title" id="grp-title">NOUVEAU GROUPE</div>
+    <div class="capture-sub" id="grp-sub">Ex: "Nanterre Université", "Bagneux Mardi", "Move to Heal — Riviera Maya"</div>
+    <div class="fgrp">
+      <label class="flbl" id="grp-lbl-name">Nom du groupe</label>
+      <input class="finput" id="grp-name" type="text" placeholder="Nom du groupe">
+    </div>
+    <div class="capture-btns">
+      <button class="btn-capture-save" onclick="saveGroup()" id="grp-save">✓ CRÉER LE GROUPE</button>
+      <button class="btn-capture-cancel" onclick="closeGroupModal()" id="grp-cancel">ANNULER</button>
+    </div>
+  </div>
+</div>
 
 <!-- BIBLIO SUB-NAV -->
 <nav class="subnav" id="biblio-subnav" style="display:none">
@@ -758,6 +792,18 @@ let DB = [
 {id:63,table:'t6',type:'meditation',nf:'Rituel d\'ouverture collectif',ne:'Collective opening ritual',int:'disponibilité',sf:'En cercle, debout, les mains jointes ou proches. Trois respirations communes. Chacun pose une intention en silence. L\'animateur clôt le cercle par un son ou un geste. Le groupe entre ensemble dans la session.',se:'In a circle, standing, hands joined or close. Three shared breaths. Each person sets an intention in silence. The facilitator closes the circle with a sound or gesture. The group enters the session together.',lv:'beginner',dur:5,ppl:'groupe',cf:'Silence total. Variable : chacun nomme son intention à voix haute.',ce:'Complete silence. Variable: each names their intention aloud.',tags:['respiration','silence','ancrage','groupe','somatique','meditation','safe','débutant','introspectif']},
 ];
 
+// ════════════════ SUPABASE CONFIG ════════════════
+// 👉 Remplace ces deux valeurs par celles de TON projet Supabase
+// (Project Settings → API → Project URL / anon public key)
+const SUPABASE_URL = 'https://YOUR-PROJECT.supabase.co';
+const SUPABASE_ANON_KEY = 'YOUR-ANON-KEY';
+let supa = null;
+try{
+  if(SUPABASE_URL.indexOf('YOUR-PROJECT')===-1 && window.supabase){
+    supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }
+}catch(e){}
+
 // ════════════════ STATE ════════════════
 let lang = 'fr';
 let tab = 'random';
@@ -770,13 +816,15 @@ let liveIdx = 0;
 let liveTimer = {active:false, paused:false, total:0, remaining:0, interval:null};
 let liveScoreLarge = false;
 let sessionNote = '';
+let groups = [];
+let activeGroupId = null;
 
 // ════════════════ LANG ════════════════
 function setLang(l){
   lang=l;
   document.querySelectorAll('.lang-btn').forEach((b,i)=>b.classList.toggle('on',['fr','en'][i]===l));
   document.getElementById('btn-roll').textContent=t('roll');
-  document.getElementById('lbl-sess').textContent=t('sess');
+  document.getElementById('lbl-sess').textContent=t('sess')+(()=>{const g=groups.find(x=>x.id===activeGroupId);return g?(' — '+g.name):'';})();
   document.getElementById('btn-copy').textContent=t('copy');
   document.getElementById('btn-print').textContent=t('print');
   document.getElementById('btn-sub').textContent=t('submit');
@@ -805,6 +853,12 @@ function setLang(l){
   document.getElementById('cap-save').textContent=(lang==='fr'?'✓ ENREGISTRER LE BROUILLON':'✓ SAVE DRAFT');
   document.getElementById('cap-cancel').textContent=(lang==='fr'?'ANNULER':'CANCEL');
   document.getElementById('btn-live-launch').textContent='▶ LIVE';
+  document.getElementById('grp-title').textContent=(lang==='fr'?'NOUVEAU GROUPE':'NEW GROUP');
+  document.getElementById('grp-sub').textContent=(lang==='fr'?'Ex: "Nanterre Université", "Bagneux Mardi", "Move to Heal — Riviera Maya"':'E.g. "Nanterre University", "Bagneux Tuesday", "Move to Heal — Riviera Maya"');
+  document.getElementById('grp-lbl-name').textContent=(lang==='fr'?'Nom du groupe':'Group name');
+  document.getElementById('grp-name').placeholder=(lang==='fr'?'Nom du groupe':'Group name');
+  document.getElementById('grp-save').textContent=(lang==='fr'?'✓ CRÉER LE GROUPE':'✓ CREATE GROUP');
+  document.getElementById('grp-cancel').textContent=(lang==='fr'?'ANNULER':'CANCEL');
 }
 function t(k){return S[lang][k]||k;}
 function tn(k){return S[lang].tnames[k]||k;}
@@ -1205,46 +1259,214 @@ function copySession(){
   navigator.clipboard.writeText(txt).then(()=>toast(t('copy_ok'))).catch(()=>toast('Copier manuellement'));
 }
 
-// ════════════════ LOCALSTORAGE ════════════════
-const LS_SESSION='gol_session';
+// ════════════════ LOCAL CACHE + CLOUD SYNC ════════════════
 const LS_CUSTOM='gol_custom';
-const LS_NOTE='gol_note';
+const LS_GROUPS='gol_groups';
+const LS_ACTIVE_GROUP='gol_active_group';
+const LS_GROUPDATA='gol_groupdata_'; // + groupId
 
-function saveState(){
+let saveDebounce=null;
+
+function setSyncIcon(state){
+  // state: 'synced' | 'syncing' | 'offline'
+  const el=document.getElementById('group-sync');
+  if(!el)return;
+  el.classList.remove('synced','syncing','offline');
+  el.classList.add(state);
+  el.title=state==='synced'?(lang==='fr'?'Synchronisé':'Synced'):state==='syncing'?(lang==='fr'?'Synchronisation…':'Syncing…'):(lang==='fr'?'Hors connexion / local uniquement':'Offline / local only');
+}
+
+// ── Local cache (always written, works offline) ──
+function saveLocal(){
   try{
     const customs=DB.filter(e=>e.custom);
-    localStorage.setItem(LS_SESSION,JSON.stringify(session));
     localStorage.setItem(LS_CUSTOM,JSON.stringify(customs));
-    localStorage.setItem(LS_NOTE,sessionNote);
+    localStorage.setItem(LS_GROUPS,JSON.stringify(groups));
+    localStorage.setItem(LS_ACTIVE_GROUP,activeGroupId||'');
+    if(activeGroupId){
+      localStorage.setItem(LS_GROUPDATA+activeGroupId,JSON.stringify({session,session_note:sessionNote}));
+    }
   }catch(e){}
 }
 
-function loadState(){
+function loadLocal(){
   try{
-    const savedSession=localStorage.getItem(LS_SESSION);
     const savedCustom=localStorage.getItem(LS_CUSTOM);
-    const savedNote=localStorage.getItem(LS_NOTE);
     if(savedCustom){
       const customs=JSON.parse(savedCustom);
       customs.forEach(ex=>{if(!DB.find(e=>e.id===ex.id))DB.push(ex);});
     }
-    if(savedSession){
-      const s=JSON.parse(savedSession);
-      // remap to current DB entries to get fresh data, but preserve per-exercise notes
+    const savedGroups=localStorage.getItem(LS_GROUPS);
+    if(savedGroups)groups=JSON.parse(savedGroups);
+    const savedActive=localStorage.getItem(LS_ACTIVE_GROUP);
+    if(savedActive)activeGroupId=savedActive;
+  }catch(e){}
+}
+
+function loadGroupDataLocal(groupId){
+  try{
+    const raw=localStorage.getItem(LS_GROUPDATA+groupId);
+    if(raw){
+      const d=JSON.parse(raw);
+      const s=d.session||[];
       session=s.map(e=>{
-        const fresh=DB.find(d=>d.id===e.id);
-        if(fresh)return{...fresh,note:e.note||''};
-        return e;
+        const fresh=DB.find(x=>x.id===e.id);
+        return fresh?{...fresh,note:e.note||''}:e;
       }).filter(Boolean);
+      sessionNote=d.session_note||'';
+      return;
     }
-    if(savedNote)sessionNote=savedNote;
-    document.getElementById('cnt').textContent=DB.length;
-  }catch(e){session=[];}
+  }catch(e){}
+  session=[];sessionNote='';
+}
+
+// ── Public entry point: called after any local change ──
+function saveState(){
+  saveLocal();
+  if(saveDebounce)clearTimeout(saveDebounce);
+  saveDebounce=setTimeout(syncToCloud,800);
+}
+
+// ── Cloud sync (Supabase) ──
+async function syncToCloud(){
+  if(!supa||!navigator.onLine){setSyncIcon(supa?'offline':'offline');return;}
+  setSyncIcon('syncing');
+  try{
+    // 1. push custom exercises
+    const customs=DB.filter(e=>e.custom);
+    if(customs.length){
+      const rows=customs.map(ex=>({id:ex.id,data:ex,updated_at:new Date().toISOString()}));
+      await supa.from('custom_exercises').upsert(rows);
+    }
+    // 2. push active group's session + note
+    if(activeGroupId){
+      await supa.from('group_data').upsert({
+        group_id:activeGroupId,
+        session:session,
+        session_note:sessionNote,
+        updated_at:new Date().toISOString()
+      });
+    }
+    setSyncIcon('synced');
+  }catch(e){setSyncIcon('offline');}
+}
+
+async function syncFromCloud(){
+  if(!supa||!navigator.onLine){setSyncIcon('offline');return;}
+  setSyncIcon('syncing');
+  try{
+    // 1. pull custom exercises
+    const{data:exRows}=await supa.from('custom_exercises').select('*');
+    if(exRows){
+      exRows.forEach(row=>{
+        const idx=DB.findIndex(e=>e.id===row.id);
+        if(idx>=0)DB[idx]=row.data; else DB.push(row.data);
+      });
+      document.getElementById('cnt').textContent=DB.length;
+    }
+    // 2. pull groups
+    const{data:grpRows}=await supa.from('groups').select('*').order('created_at',{ascending:true});
+    if(grpRows&&grpRows.length){
+      groups=grpRows.map(g=>({id:g.id,name:g.name}));
+      if(!activeGroupId||!groups.find(g=>g.id===activeGroupId))activeGroupId=groups[0].id;
+    }
+    // 3. pull active group's session+note
+    if(activeGroupId){
+      const{data:gd}=await supa.from('group_data').select('*').eq('group_id',activeGroupId).maybeSingle();
+      if(gd){
+        const s=gd.session||[];
+        session=s.map(e=>{
+          const fresh=DB.find(x=>x.id===e.id);
+          return fresh?{...fresh,note:e.note||''}:e;
+        }).filter(Boolean);
+        sessionNote=gd.session_note||'';
+      }
+    }
+    saveLocal();
+    setSyncIcon('synced');
+    renderGroupSelect();
+    refreshCurrentView();
+  }catch(e){setSyncIcon('offline');}
+}
+
+function refreshCurrentView(){
+  if(tab==='session')renderSession();
+  else if(tab==='journal')renderJournal();
+  else if(tab==='live')renderLive();
+  else if(tab==='biblio'&&currentSub==='catalog')renderCatalog();
+  const nb=document.getElementById('nb-session');
+  if(nb)nb.textContent=session.length?`📋 SESSION (${session.length})`:(lang==='fr'?'📋 SESSION':'📋 SESSION');
+  const lblSess=document.getElementById('lbl-sess');
+  if(lblSess){const g=groups.find(x=>x.id===activeGroupId);lblSess.textContent=t('sess')+(g?(' — '+g.name):'');}
+}
+
+// ── Groups UI ──
+function renderGroupSelect(){
+  const sel=document.getElementById('group-select');
+  if(!groups.length){
+    sel.innerHTML=`<option value="">${lang==='fr'?'Aucun groupe — créer avec +':'No group — create with +'}</option>`;
+    return;
+  }
+  sel.innerHTML=groups.map(g=>`<option value="${g.id}"${g.id===activeGroupId?' selected':''}>${g.name}</option>`).join('');
+}
+
+function onGroupChange(){
+  const sel=document.getElementById('group-select');
+  activeGroupId=sel.value;
+  loadGroupDataLocal(activeGroupId);
+  saveLocal();
+  refreshCurrentView();
+  syncFromCloud(); // pull latest for this group
+}
+
+function openGroupModal(){document.getElementById('group-modal').classList.add('show');document.getElementById('grp-name').value='';setTimeout(()=>document.getElementById('grp-name').focus(),100);}
+function closeGroupModal(){document.getElementById('group-modal').classList.remove('show');}
+
+async function saveGroup(){
+  const name=document.getElementById('grp-name').value.trim();
+  if(!name)return;
+  let newId;
+  if(supa&&navigator.onLine){
+    try{
+      const{data,error}=await supa.from('groups').insert({name}).select().single();
+      if(error)throw error;
+      newId=data.id;
+    }catch(e){
+      newId='local_'+Date.now();
+    }
+  }else{
+    newId='local_'+Date.now();
+  }
+  groups.push({id:newId,name});
+  activeGroupId=newId;
+  session=[];sessionNote='';
+  saveLocal();
+  renderGroupSelect();
+  document.getElementById('group-select').value=newId;
+  refreshCurrentView();
+  closeGroupModal();
+  if(supa)syncToCloud();
+}
+
+// ── Init sequence ──
+function initApp(){
+  loadLocal();
+  document.getElementById('cnt').textContent=DB.length;
+  // ensure at least a default local group if none and no cloud configured
+  if(!groups.length){
+    const defName=lang==='fr'?'Mon groupe':'My group';
+    groups=[{id:'local_default',name:defName}];
+    activeGroupId='local_default';
+  }
+  if(activeGroupId)loadGroupDataLocal(activeGroupId);
+  renderGroupSelect();
   if(session.length){
-    // show subtle indicator
     const nb=document.getElementById('nb-session');
     if(nb)nb.textContent=`📋 SESSION (${session.length})`;
   }
+  setSyncIcon(supa?'syncing':'offline');
+  if(supa)syncFromCloud();
+  window.addEventListener('online',()=>{if(supa)syncFromCloud();});
 }
 
 // ════════════════ JOURNAL ════════════════
@@ -1255,6 +1477,8 @@ function renderJournal(){
     return;
   }
   const dateStr=new Date().toLocaleDateString(lang==='fr'?'fr-FR':'en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const grp=groups.find(g=>g.id===activeGroupId);
+  const grpName=grp?grp.name:'';
   const entries=session.map((ex,i)=>{
     const note=(ex.note||'').trim();
     return`<div class="journal-entry">
@@ -1264,7 +1488,7 @@ function renderJournal(){
   }).join('');
   wrap.innerHTML=`
     <div class="journal-hdr">
-      <div class="sess-lbl">${lang==='fr'?'JOURNAL DE SÉANCE':'SESSION JOURNAL'}</div>
+      <div class="sess-lbl">${lang==='fr'?'JOURNAL':'JOURNAL'}${grpName?' — '+grpName:''}</div>
       <div class="journal-date">${dateStr}</div>
     </div>
     <div class="journal-session-note">
@@ -1482,8 +1706,7 @@ function toast(msg){
 }
 
 // ════════════════ INIT ════════════════
-loadState();
-document.getElementById('cnt').textContent=DB.length;
+initApp();
 initRandom();
 </script>
 </body>
