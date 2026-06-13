@@ -303,8 +303,37 @@ body{background:var(--ink);color:var(--cream);font-family:var(--font);min-height
 .rf-section{margin-bottom:.6rem;}
 .rf-section-lbl{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cream3);margin-bottom:.35rem;}
 
-@media(max-width:540px){
-  .live-name{font-size:1.25rem;}
+/* ── SUBNAV (Bibliothèque) ── */
+.subnav{background:var(--ink2);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;padding:0 6px;scrollbar-width:none;}
+.subnav::-webkit-scrollbar{display:none;}
+.sb{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.04em;padding:0 11px;height:36px;background:transparent;color:var(--cream3);border:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s;}
+.sb.on{color:var(--amber);border-bottom-color:var(--amber);}
+.sb:hover:not(.on){color:var(--cream2);}
+
+/* ── FLOATING CAPTURE BUTTON ── */
+.fab-capture{position:fixed;bottom:20px;right:18px;width:52px;height:52px;border-radius:50%;background:var(--amber);color:var(--ink);border:none;font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4);z-index:300;display:flex;align-items:center;justify-content:center;}
+.fab-capture:hover{background:#f0ac3a;}
+.capture-modal{display:none;position:fixed;inset:0;background:rgba(13,12,10,.95);z-index:450;align-items:flex-end;justify-content:center;}
+.capture-modal.show{display:flex;}
+.capture-sheet{background:var(--ink2);border-radius:18px 18px 0 0;padding:1.5rem;width:100%;max-width:500px;border-top:1px solid var(--border2);}
+.capture-title{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin-bottom:.3rem;}
+.capture-sub{font-size:11px;color:var(--cream3);margin-bottom:1rem;line-height:1.5;}
+.capture-btns{display:flex;gap:8px;margin-top:.5rem;}
+.btn-capture-save{flex:1;padding:11px;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.05em;border:none;border-radius:var(--r-sm);background:var(--amber);color:var(--ink);cursor:pointer;}
+.btn-capture-save:hover{background:#f0ac3a;}
+.btn-capture-cancel{padding:11px 16px;font-family:var(--mono);font-size:12px;font-weight:700;border:1px solid var(--border2);border-radius:var(--r-sm);background:transparent;color:var(--cream3);cursor:pointer;}
+.pill-draft{border-color:rgba(232,160,48,.5);color:var(--amber);background:rgba(232,160,48,.1);}
+
+/* ── JOURNAL ── */
+.journal-wrap{display:flex;flex-direction:column;gap:.9rem;}
+.journal-session-note{background:var(--ink2);border:1px solid var(--border);border-radius:var(--r);padding:1rem;}
+.journal-entry{background:var(--ink2);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;}
+.journal-entry-head{display:flex;align-items:center;gap:8px;margin-bottom:.4rem;}
+.journal-entry-name{font-size:13px;font-weight:600;flex:1;}
+.journal-entry-note{font-size:13px;color:var(--cream2);line-height:1.6;}
+.journal-entry-empty{font-size:12px;color:var(--cream3);font-style:italic;}
+.journal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.2rem;}
+.journal-date{font-family:var(--mono);font-size:10px;color:var(--cream3);}
   .live-score{font-size:.9rem;}
   .live-score.large{font-size:1.1rem;}
   .live-timer-display{font-size:2rem;}
@@ -355,15 +384,21 @@ body{background:var(--ink);color:var(--cream);font-family:var(--font);min-height
 <nav class="nav" id="main-nav">
   <button class="nb on" onclick="goTab('random')" id="nb-random">⚡ RANDOM</button>
   <button class="nb" onclick="goTab('live')" id="nb-live" style="color:var(--terra);border-bottom-color:transparent;">▶ LIVE</button>
-  <button class="nb" onclick="goTab('t1')" id="nb-t1">01 ÉTAT</button>
-  <button class="nb" onclick="goTab('t2')" id="nb-t2">02 CONTRAINTES</button>
-  <button class="nb" onclick="goTab('t3')" id="nb-t3">03 ESPACE</button>
-  <button class="nb" onclick="goTab('t4')" id="nb-t4">04 RELATIONNEL</button>
-  <button class="nb" onclick="goTab('t5')" id="nb-t5">05 CYPHER</button>
-  <button class="nb" onclick="goTab('t6')" id="nb-t6">06 SOMATIQUE</button>
-  <button class="nb" onclick="goTab('catalog')" id="nb-catalog">TOUS</button>
-  <button class="nb" onclick="goTab('session')" id="nb-session">SESSION</button>
-  <button class="nb" onclick="goTab('add')" id="nb-add">+ AJOUTER</button>
+  <button class="nb" onclick="goTab('biblio')" id="nb-biblio">📚 BIBLIOTHÈQUE</button>
+  <button class="nb" onclick="goTab('session')" id="nb-session">📋 SESSION</button>
+  <button class="nb" onclick="goTab('journal')" id="nb-journal">📓 JOURNAL</button>
+</nav>
+
+<!-- BIBLIO SUB-NAV -->
+<nav class="subnav" id="biblio-subnav" style="display:none">
+  <button class="sb on" onclick="goSub('catalog')" id="sb-catalog">TOUS</button>
+  <button class="sb" onclick="goSub('t1')" id="sb-t1">01 ÉTAT</button>
+  <button class="sb" onclick="goSub('t2')" id="sb-t2">02 CONTRAINTES</button>
+  <button class="sb" onclick="goSub('t3')" id="sb-t3">03 ESPACE</button>
+  <button class="sb" onclick="goSub('t4')" id="sb-t4">04 RELATIONNEL</button>
+  <button class="sb" onclick="goSub('t5')" id="sb-t5">05 CYPHER</button>
+  <button class="sb" onclick="goSub('t6')" id="sb-t6">06 SOMATIQUE</button>
+  <button class="sb" onclick="goSub('add')" id="sb-add" style="color:var(--amber);">✎ AJOUTER</button>
 </nav>
 
 <main class="main">
@@ -394,6 +429,8 @@ body{background:var(--ink);color:var(--cream);font-family:var(--font);min-height
   <div class="live-wrap" id="live-wrap"></div>
 </div>
 
+<!-- BIBLIOTHÈQUE -->
+<div id="v-biblio" style="display:none">
 <!-- TABLES t1–t6 -->
 <div id="v-t1" style="display:none">
   <div class="tbl-hdr"><div class="tbl-label" id="lb-t1">01</div><div class="tbl-name" id="nm-t1"></div><div class="tbl-desc" id="dc-t1"></div></div>
@@ -425,20 +462,6 @@ body{background:var(--ink);color:var(--cream);font-family:var(--font);min-height
   <div class="srch-wrap"><span class="srch-ico">🔍</span><input class="srch" id="srch" type="text" placeholder="Exercice, tag, intention, type…" oninput="renderCatalog()"></div>
   <div class="filter-bar" id="cf-bar"></div>
   <div class="ex-list" id="list-catalog"></div>
-</div>
-
-<!-- SESSION -->
-<div id="v-session" style="display:none">
-  <div class="sess-hdr">
-    <div class="sess-lbl" id="lbl-sess">SESSION EN COURS</div>
-    <div class="sess-hdr-btns">
-      <button class="btn-print" onclick="launchLive()" id="btn-live-launch" style="border-color:rgba(196,92,56,.4);color:var(--terra);">▶ LIVE</button>
-      <button class="btn-exp" onclick="openExport()" id="btn-export">↑ EXPORT</button>
-      <button class="btn-exp" onclick="copySession()" id="btn-copy">COPIER</button>
-      <button class="btn-print" onclick="printSession()" id="btn-print">IMPRIMER</button>
-    </div>
-  </div>
-  <div id="sess-body"></div>
 </div>
 
 <!-- ADD -->
@@ -497,8 +520,51 @@ body{background:var(--ink);color:var(--cream);font-family:var(--font);min-height
     <div class="f-ok" id="f-ok">✓ EXERCICE AJOUTÉ À LA BASE</div>
   </div>
 </div>
+</div><!-- /v-biblio -->
+
+<!-- SESSION -->
+<div id="v-session" style="display:none">
+  <div class="sess-hdr">
+    <div class="sess-lbl" id="lbl-sess">SESSION EN COURS</div>
+    <div class="sess-hdr-btns">
+      <button class="btn-print" onclick="launchLive()" id="btn-live-launch" style="border-color:rgba(196,92,56,.4);color:var(--terra);">▶ LIVE</button>
+      <button class="btn-exp" onclick="openExport()" id="btn-export">↑ EXPORT</button>
+      <button class="btn-exp" onclick="copySession()" id="btn-copy">COPIER</button>
+      <button class="btn-print" onclick="printSession()" id="btn-print">IMPRIMER</button>
+    </div>
+  </div>
+  <div id="sess-body"></div>
+</div>
+
+<!-- JOURNAL -->
+<div id="v-journal" style="display:none">
+  <div class="journal-wrap" id="journal-wrap"></div>
+</div>
 
 </main><!-- /main -->
+
+<!-- FAB QUICK CAPTURE -->
+<button class="fab-capture" id="fab-capture" onclick="openCapture()" title="Capture rapide">✎</button>
+
+<!-- CAPTURE MODAL -->
+<div class="capture-modal" id="capture-modal">
+  <div class="capture-sheet">
+    <div class="capture-title" id="cap-title">CAPTURE RAPIDE</div>
+    <div class="capture-sub" id="cap-sub">Note juste l'idée maintenant — tu pourras compléter type, famille, tags etc. plus tard depuis la BIBLIOTHÈQUE → TOUS.</div>
+    <div class="fgrp">
+      <label class="flbl" id="cap-lbl-name">Nom de l'exercice</label>
+      <input class="finput" id="cap-name" type="text" placeholder="Ex: Le bounce diagonal">
+    </div>
+    <div class="fgrp">
+      <label class="flbl" id="cap-lbl-score">Idée / règle</label>
+      <textarea class="ftextarea" id="cap-score" placeholder="Une ou deux phrases, même brouillon…"></textarea>
+    </div>
+    <div class="capture-btns">
+      <button class="btn-capture-save" onclick="saveCapture()" id="cap-save">✓ ENREGISTRER LE BROUILLON</button>
+      <button class="btn-capture-cancel" onclick="closeCapture()" id="cap-cancel">ANNULER</button>
+    </div>
+  </div>
+</div>
 
 <!-- EXPORT MODAL -->
 <div class="export-modal" id="export-modal">
@@ -702,8 +768,8 @@ let cfFilter = {type:'', table:''};
 let timer = {active:false, paused:false, total:0, remaining:0, exId:null, interval:null};
 let liveIdx = 0;
 let liveTimer = {active:false, paused:false, total:0, remaining:0, interval:null};
-let liveNote = '';
 let liveScoreLarge = false;
+let sessionNote = '';
 
 // ════════════════ LANG ════════════════
 function setLang(l){
@@ -717,9 +783,28 @@ function setLang(l){
   document.getElementById('f-ok').textContent=t('form_ok');
   document.getElementById('srch').placeholder=t('srch_ph');
   if(tab==='random') renderRandom(randId);
-  else if(tab.startsWith('t')) renderTable(tab);
-  else if(tab==='catalog') renderCatalog();
+  else if(tab==='biblio'){if(currentSub.startsWith('t'))renderTable(currentSub);else if(currentSub==='catalog')renderCatalog();else if(currentSub==='add')renderTagSel();}
   else if(tab==='session') renderSession();
+  else if(tab==='live') renderLive();
+  else if(tab==='journal') renderJournal();
+  // refresh subnav labels
+  document.getElementById('sb-catalog').textContent=(lang==='fr'?'TOUS':'ALL');
+  document.getElementById('sb-add').textContent=(lang==='fr'?'✎ AJOUTER':'✎ ADD');
+  document.getElementById('nb-biblio').textContent=(lang==='fr'?'📚 BIBLIOTHÈQUE':'📚 LIBRARY');
+  document.getElementById('nb-session').textContent=session.length?`📋 SESSION (${session.length})`:(lang==='fr'?'📋 SESSION':'📋 SESSION');
+  document.getElementById('nb-journal').textContent=(lang==='fr'?'📓 JOURNAL':'📓 JOURNAL');
+  const subLabels=lang==='fr'?['01 ÉTAT','02 CONTRAINTES','03 ESPACE','04 RELATIONNEL','05 CYPHER','06 SOMATIQUE']:['01 WARM-UP','02 CONSTRAINTS','03 SPACE','04 RELATIONAL','05 CYPHER','06 SOMATIC'];
+  ['t1','t2','t3','t4','t5','t6'].forEach((k,i)=>{const el=document.getElementById('sb-'+k);if(el)el.textContent=subLabels[i];});
+  // capture modal
+  document.getElementById('cap-title').textContent=(lang==='fr'?'CAPTURE RAPIDE':'QUICK CAPTURE');
+  document.getElementById('cap-sub').textContent=(lang==='fr'?"Note juste l'idée maintenant — tu pourras compléter type, famille, tags etc. plus tard depuis la BIBLIOTHÈQUE → TOUS.":"Jot down the idea now — you can complete type, family, tags etc. later from LIBRARY → ALL.");
+  document.getElementById('cap-lbl-name').textContent=(lang==='fr'?"Nom de l'exercice":'Exercise name');
+  document.getElementById('cap-lbl-score').textContent=(lang==='fr'?'Idée / règle':'Idea / rule');
+  document.getElementById('cap-name').placeholder=(lang==='fr'?'Ex: Le bounce diagonal':'Ex: The diagonal bounce');
+  document.getElementById('cap-score').placeholder=(lang==='fr'?'Une ou deux phrases, même brouillon…':'One or two sentences, even rough…');
+  document.getElementById('cap-save').textContent=(lang==='fr'?'✓ ENREGISTRER LE BROUILLON':'✓ SAVE DRAFT');
+  document.getElementById('cap-cancel').textContent=(lang==='fr'?'ANNULER':'CANCEL');
+  document.getElementById('btn-live-launch').textContent='▶ LIVE';
 }
 function t(k){return S[lang][k]||k;}
 function tn(k){return S[lang].tnames[k]||k;}
@@ -733,22 +818,39 @@ function gs(ex){return lang==='fr'?ex.sf:ex.se;}
 function gc(ex){return lang==='fr'?ex.cf:ex.ce;}
 
 // ════════════════ NAVIGATION ════════════════
+let currentSub='catalog';
 function goTab(id){
   tab=id;
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
   const nbEl=document.getElementById('nb-'+id);
-  if(nbEl){nbEl.classList.add('on');if(id==='live')nbEl.style.color='var(--terra)';}
-  // reset live btn color when leaving
-  if(id!=='live'){const lb=document.getElementById('nb-live');if(lb)lb.style.color='var(--terra)';}
-  const views=['random','live','t1','t2','t3','t4','t5','t6','catalog','session','add'];
-  views.forEach(v=>{const el=document.getElementById('v-'+v);if(el)el.style.display=v===id?'block':'none';});
-  if(id.startsWith('t')) renderTable(id);
-  else if(id==='catalog') renderCatalog();
+  if(nbEl)nbEl.classList.add('on');
+  // top-level views
+  const topViews=['random','live','biblio','session','journal'];
+  topViews.forEach(v=>{const el=document.getElementById('v-'+v);if(el)el.style.display=v===id?'block':'none';});
+  // subnav visibility
+  document.getElementById('biblio-subnav').style.display=(id==='biblio')?'flex':'none';
+  // fab visibility - hide on biblio/add (form already has its own actions) to avoid overlap
+  const fab=document.getElementById('fab-capture');
+  if(fab)fab.style.display=(id==='live')?'none':'flex';
+
+  if(id==='biblio') goSub(currentSub);
   else if(id==='session') renderSession();
   else if(id==='random') initRandom();
   else if(id==='live') renderLive();
-  else if(id==='add') renderTagSel();
+  else if(id==='journal') renderJournal();
   saveState();
+}
+
+function goSub(sub){
+  currentSub=sub;
+  document.querySelectorAll('.sb').forEach(b=>b.classList.remove('on'));
+  const sbEl=document.getElementById('sb-'+sub);
+  if(sbEl)sbEl.classList.add('on');
+  const subViews=['t1','t2','t3','t4','t5','t6','catalog','add'];
+  subViews.forEach(v=>{const el=document.getElementById('v-'+v);if(el)el.style.display=v===sub?'block':'none';});
+  if(sub.startsWith('t')) renderTable(sub);
+  else if(sub==='catalog') renderCatalog();
+  else if(sub==='add') renderTagSel();
 }
 
 // ════════════════ RANDOM ════════════════
@@ -906,7 +1008,7 @@ function card(ex,ctx){
   <div class="ex-head">
     <div class="ex-dot" style="background:${color}"></div>
     <div class="ex-title">${gn(ex)}</div>
-    <div class="ex-rpills">${lvPill(ex.lv)}<span class="pill">${ex.dur}m</span>${ex.custom?'<span class="pill pill-amber">★</span>':''}</div>
+    <div class="ex-rpills">${lvPill(ex.lv)}<span class="pill">${ex.dur}m</span>${ex.draft?'<span class="pill pill-draft">✎ '+(lang==='fr'?'brouillon':'draft')+'</span>':ex.custom?'<span class="pill pill-amber">★</span>':''}</div>
     <div class="ex-chev">⌄</div>
   </div>
   <div class="ex-body">
@@ -977,7 +1079,7 @@ function renderLive(){
     </div>
     <div class="live-note-wrap">
       <div class="live-note-label">${lang==='fr'?'NOTE SUR CET EXERCICE':'NOTE ON THIS EXERCISE'}</div>
-      <textarea class="live-note-input" id="live-note-field" placeholder="${lang==='fr'?'Ce qui s\'est passé, réactions, adaptations…':'What happened, reactions, adaptations…'}" oninput="saveLiveNote()">${liveNote}</textarea>
+      <textarea class="live-note-input" id="live-note-field" placeholder="${lang==='fr'?'Ce qui s\'est passé, réactions, adaptations…':'What happened, reactions, adaptations…'}" oninput="saveLiveNote()">${ex.note||''}</textarea>
     </div>
     <div class="live-nav-row">
       <button class="btn-live-nav" onclick="liveStep(-1)" ${liveIdx===0?'disabled':''}>← ${lang==='fr'?'PRÉCÉDENT':'PREV'}</button>
@@ -1032,19 +1134,16 @@ function resetLiveTimer(){
 }
 
 function liveStep(dir){
-  // save note
-  const nf=document.getElementById('live-note-field');
-  if(nf)liveNote=nf.value;
+  saveLiveNote();
   stopLiveTimer();
   liveTimer.total=0;liveTimer.remaining=0;
-  liveNote='';
   liveIdx=Math.max(0,Math.min(session.length-1,liveIdx+dir));
   renderLive();
 }
 
 function saveLiveNote(){
   const nf=document.getElementById('live-note-field');
-  if(nf)liveNote=nf.value;
+  if(nf&&session[liveIdx]){session[liveIdx].note=nf.value;saveState();}
 }
 
 // ════════════════ SESSION (enhanced) ════════════════
@@ -1083,7 +1182,7 @@ function renderSession(){
 
 function launchLiveAt(i){
   liveIdx=i;stopLiveTimer();
-  liveTimer.total=0;liveTimer.remaining=0;liveNote='';
+  liveTimer.total=0;liveTimer.remaining=0;
   goTab('live');
 }
 
@@ -1109,12 +1208,14 @@ function copySession(){
 // ════════════════ LOCALSTORAGE ════════════════
 const LS_SESSION='gol_session';
 const LS_CUSTOM='gol_custom';
+const LS_NOTE='gol_note';
 
 function saveState(){
   try{
     const customs=DB.filter(e=>e.custom);
     localStorage.setItem(LS_SESSION,JSON.stringify(session));
     localStorage.setItem(LS_CUSTOM,JSON.stringify(customs));
+    localStorage.setItem(LS_NOTE,sessionNote);
   }catch(e){}
 }
 
@@ -1122,22 +1223,110 @@ function loadState(){
   try{
     const savedSession=localStorage.getItem(LS_SESSION);
     const savedCustom=localStorage.getItem(LS_CUSTOM);
+    const savedNote=localStorage.getItem(LS_NOTE);
     if(savedCustom){
       const customs=JSON.parse(savedCustom);
       customs.forEach(ex=>{if(!DB.find(e=>e.id===ex.id))DB.push(ex);});
     }
     if(savedSession){
       const s=JSON.parse(savedSession);
-      // remap to current DB entries to get fresh data
-      session=s.map(e=>DB.find(d=>d.id===e.id)||e).filter(Boolean);
+      // remap to current DB entries to get fresh data, but preserve per-exercise notes
+      session=s.map(e=>{
+        const fresh=DB.find(d=>d.id===e.id);
+        if(fresh)return{...fresh,note:e.note||''};
+        return e;
+      }).filter(Boolean);
     }
+    if(savedNote)sessionNote=savedNote;
     document.getElementById('cnt').textContent=DB.length;
   }catch(e){session=[];}
   if(session.length){
     // show subtle indicator
     const nb=document.getElementById('nb-session');
-    if(nb)nb.textContent=`SESSION (${session.length})`;
+    if(nb)nb.textContent=`📋 SESSION (${session.length})`;
   }
+}
+
+// ════════════════ JOURNAL ════════════════
+function renderJournal(){
+  const wrap=document.getElementById('journal-wrap');
+  if(!session.length){
+    wrap.innerHTML=`<div class="live-empty"><div style="font-size:2rem;margin-bottom:.5rem">📓</div>${lang==='fr'?'Le journal se remplit quand tu animes en mode LIVE : note tes observations exercice par exercice, et une note globale de séance ici.':'The journal fills up as you run LIVE sessions: note your observations exercise by exercise, and add an overall session note here.'}</div>`;
+    return;
+  }
+  const dateStr=new Date().toLocaleDateString(lang==='fr'?'fr-FR':'en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const entries=session.map((ex,i)=>{
+    const note=(ex.note||'').trim();
+    return`<div class="journal-entry">
+      <div class="journal-entry-head"><span class="ex-dot" style="background:${tc(ex.type)};display:inline-block;width:8px;height:8px;border-radius:50%"></span><div class="journal-entry-name">${i+1}. ${gn(ex)}</div></div>
+      ${note?`<div class="journal-entry-note">${note}</div>`:`<div class="journal-entry-empty">${lang==='fr'?'Pas de note':'No note'}</div>`}
+    </div>`;
+  }).join('');
+  wrap.innerHTML=`
+    <div class="journal-hdr">
+      <div class="sess-lbl">${lang==='fr'?'JOURNAL DE SÉANCE':'SESSION JOURNAL'}</div>
+      <div class="journal-date">${dateStr}</div>
+    </div>
+    <div class="journal-session-note">
+      <div class="live-note-label">${lang==='fr'?'NOTE GLOBALE DE SÉANCE':'OVERALL SESSION NOTE'}</div>
+      <textarea class="live-note-input" id="journal-note-field" placeholder="${lang==='fr'?'Ambiance générale, ce qui a fonctionné, à ajuster pour la prochaine fois…':'Overall vibe, what worked, what to adjust next time…'}" oninput="saveSessionNote()">${sessionNote}</textarea>
+    </div>
+    ${entries}
+    <div class="sess-hdr-btns" style="margin-top:.3rem">
+      <button class="btn-exp" onclick="copyJournal()">${lang==='fr'?'COPIER LE JOURNAL':'COPY JOURNAL'}</button>
+      <button class="btn-print" onclick="printJournal()">${lang==='fr'?'IMPRIMER':'PRINT'}</button>
+    </div>`;
+}
+
+function saveSessionNote(){
+  const nf=document.getElementById('journal-note-field');
+  if(nf){sessionNote=nf.value;saveState();}
+}
+
+function copyJournal(){
+  const dateStr=new Date().toLocaleDateString('fr-FR');
+  const lines=session.map((ex,i)=>`${i+1}. ${gn(ex)}\n   ${lang==='fr'?'Note':'Note'}: ${(ex.note||'—')}`).join('\n\n');
+  const txt=`GROOV'O'LAB — Journal de séance — ${dateStr}\n${'─'.repeat(30)}\n\n${lang==='fr'?'Note globale':'Overall note'}: ${sessionNote||'—'}\n\n${lines}\n\n${'─'.repeat(30)}\ngroovomatik.com`;
+  navigator.clipboard.writeText(txt).then(()=>toast(t('copy_ok'))).catch(()=>toast('Copier manuellement'));
+}
+
+function printJournal(){
+  const dateStr=new Date().toLocaleDateString('fr-FR');
+  const lines=session.map((ex,i)=>`${i+1}. ${gn(ex)}\n   ${lang==='fr'?'Note':'Note'}: ${(ex.note||'—')}\n`).join('\n');
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Journal Groov'O'laB</title>
+  <style>body{font-family:Georgia,serif;padding:2.5rem;max-width:700px;margin:0 auto;color:#222;}h1{font-size:1.4rem;margin-bottom:.3rem;}pre{font-family:inherit;white-space:pre-wrap;font-size:.9rem;line-height:1.7;}footer{margin-top:2rem;font-size:.75rem;color:#888;}</style></head>
+  <body><h1>Groov'O'laB — Journal de séance</h1><p style="font-size:.8rem;color:#666;margin-bottom:1.5rem">${dateStr}</p>
+  <p><strong>${lang==='fr'?'Note globale':'Overall note'} :</strong> ${sessionNote||'—'}</p>
+  <pre>${lines}</pre><footer>groovomatik.com</footer></body></html>`);
+  w.document.close();w.print();
+}
+
+// ════════════════ QUICK CAPTURE ════════════════
+function openCapture(){
+  document.getElementById('capture-modal').classList.add('show');
+  document.getElementById('cap-name').value='';
+  document.getElementById('cap-score').value='';
+  setTimeout(()=>document.getElementById('cap-name').focus(),100);
+}
+function closeCapture(){document.getElementById('capture-modal').classList.remove('show');}
+function saveCapture(){
+  const name=document.getElementById('cap-name').value.trim();
+  const score=document.getElementById('cap-score').value.trim();
+  if(!name)return;
+  const id=Math.max(...DB.map(e=>e.id))+1;
+  DB.push({
+    id,table:'t2',type:'composition',
+    nf:name,ne:name,int:'textures',
+    sf:score||(lang==='fr'?'(à compléter)':'(to complete)'),
+    se:score||(lang==='fr'?'(à compléter)':'(to complete)'),
+    lv:'intermediate',dur:10,ppl:'tous',
+    cf:'',ce:'',tags:[],custom:true,draft:true
+  });
+  document.getElementById('cnt').textContent=DB.length;
+  saveState();
+  closeCapture();
+  toast(lang==='fr'?'✓ Brouillon enregistré':'✓ Draft saved');
 }
 
 // ════════════════ EXAMPLES DATA ════════════════
